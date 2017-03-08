@@ -1,0 +1,4 @@
+jdbcUrl = jdbc:mysql://127.0.0.1:3306/go?zeroDateTimeBehavior=convertToNull
+user = root
+password =
+devMode = true
