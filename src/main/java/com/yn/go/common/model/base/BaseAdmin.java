@@ -54,6 +54,15 @@ public abstract class BaseAdmin<M extends BaseAdmin<M>> extends Model<M> impleme
 		return get("address");
 	}
 
+	public M setType(java.lang.Integer type) {
+		set("type", type);
+		return (M)this;
+	}
+
+	public java.lang.Integer getType() {
+		return get("type");
+	}
+
 	public M setCreateDatetime(java.util.Date createDatetime) {
 		set("create_datetime", createDatetime);
 		return (M)this;

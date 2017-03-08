@@ -36,24 +36,6 @@ public abstract class BaseTrainingAddress<M extends BaseTrainingAddress<M>> exte
 		return get("address");
 	}
 
-	public M setCreateDatetime(java.util.Date createDatetime) {
-		set("create_datetime", createDatetime);
-		return (M)this;
-	}
-
-	public java.util.Date getCreateDatetime() {
-		return get("create_datetime");
-	}
-
-	public M setUpdateDatetime(java.util.Date updateDatetime) {
-		set("update_datetime", updateDatetime);
-		return (M)this;
-	}
-
-	public java.util.Date getUpdateDatetime() {
-		return get("update_datetime");
-	}
-
 	public M setUserId(java.lang.Integer userId) {
 		set("user_id", userId);
 		return (M)this;
@@ -70,6 +52,24 @@ public abstract class BaseTrainingAddress<M extends BaseTrainingAddress<M>> exte
 
 	public java.lang.Integer getAdminId() {
 		return get("admin_id");
+	}
+
+	public M setCreateDatetime(java.util.Date createDatetime) {
+		set("create_datetime", createDatetime);
+		return (M)this;
+	}
+
+	public java.util.Date getCreateDatetime() {
+		return get("create_datetime");
+	}
+
+	public M setUpdateDatetime(java.util.Date updateDatetime) {
+		set("update_datetime", updateDatetime);
+		return (M)this;
+	}
+
+	public java.util.Date getUpdateDatetime() {
+		return get("update_datetime");
 	}
 
 }

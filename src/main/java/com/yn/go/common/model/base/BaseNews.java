@@ -27,15 +27,6 @@ public abstract class BaseNews<M extends BaseNews<M>> extends Model<M> implement
 		return get("title");
 	}
 
-	public M setType(java.lang.Integer type) {
-		set("type", type);
-		return (M)this;
-	}
-
-	public java.lang.Integer getType() {
-		return get("type");
-	}
-
 	public M setDescription(java.lang.String description) {
 		set("description", description);
 		return (M)this;
@@ -43,6 +34,15 @@ public abstract class BaseNews<M extends BaseNews<M>> extends Model<M> implement
 
 	public java.lang.String getDescription() {
 		return get("description");
+	}
+
+	public M setType(java.lang.Integer type) {
+		set("type", type);
+		return (M)this;
+	}
+
+	public java.lang.Integer getType() {
+		return get("type");
 	}
 
 	public M setAdminId(java.lang.Integer adminId) {

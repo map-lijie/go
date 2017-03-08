@@ -14,7 +14,7 @@ public class AdminInterceptor implements Interceptor{
 		if(user!=null){
 			inv.invoke();
 		}else{
-			controller.redirect("/admin/login/tologin");
+			controller.redirect("/admin/login.html");
 		}
 		
 	}

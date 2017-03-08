@@ -18,15 +18,6 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("id");
 	}
 
-	public M setTTId(java.lang.Integer tTId) {
-		set("t_t_id", tTId);
-		return (M)this;
-	}
-
-	public java.lang.Integer getTTId() {
-		return get("t_t_id");
-	}
-
 	public M setUserName(java.lang.String userName) {
 		set("user_name", userName);
 		return (M)this;
@@ -115,6 +106,24 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 
 	public java.lang.String getUnit() {
 		return get("unit");
+	}
+
+	public M setCertificateNumber(java.lang.String certificateNumber) {
+		set("certificate_number", certificateNumber);
+		return (M)this;
+	}
+
+	public java.lang.String getCertificateNumber() {
+		return get("certificate_number");
+	}
+
+	public M setCertificateDatetime(java.util.Date certificateDatetime) {
+		set("certificate_datetime", certificateDatetime);
+		return (M)this;
+	}
+
+	public java.util.Date getCertificateDatetime() {
+		return get("certificate_datetime");
 	}
 
 	public M setCreateDatetime(java.util.Date createDatetime) {

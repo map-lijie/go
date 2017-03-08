@@ -9,6 +9,7 @@ public class AdminController extends Controller{
 	
 	public void save(){
 		Admin admin = getBean(Admin.class, "");
+		
 		admin.save();
 		renderJson(admin);
 	}

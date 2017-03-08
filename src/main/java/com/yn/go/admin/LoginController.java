@@ -13,7 +13,6 @@ import com.yn.go.common.model.Admin;
 
 public class LoginController extends Controller{
 
-	//@ActionKey("/admin/login")
 	@Clear(AdminInterceptor.class)
 	public void login(){
 		Map<String,Object> resultMap =Maps.newHashMap();
@@ -49,10 +48,26 @@ public class LoginController extends Controller{
 		renderJson(resultMap);
 	}
 	
-	//@ActionKey("/admin/login")
 	@Clear(AdminInterceptor.class)
 	public void tologin(){
 		render("login.html");
+	}
+	
+	public void logout(){
+		Map<String,Object> resultMap =Maps.newHashMap();
+		int errcode =0;
+		String errmsg ="OK";
+		try {
+			removeSessionAttr("user");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			errcode =9999;
+			errmsg="操作异常，请稍候重试";
+		}
+		resultMap.put("errcode", errcode);
+		resultMap.put("errmsg", errmsg);
+		renderJson(resultMap);
 	}
 	
 }

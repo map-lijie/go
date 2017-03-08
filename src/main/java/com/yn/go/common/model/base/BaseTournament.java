@@ -63,6 +63,15 @@ public abstract class BaseTournament<M extends BaseTournament<M>> extends Model<
 		return get("admin_id");
 	}
 
+	public M setStatus(java.lang.Integer status) {
+		set("status", status);
+		return (M)this;
+	}
+
+	public java.lang.Integer getStatus() {
+		return get("status");
+	}
+
 	public M setStartDatetime(java.util.Date startDatetime) {
 		set("start_datetime", startDatetime);
 		return (M)this;
@@ -72,13 +81,13 @@ public abstract class BaseTournament<M extends BaseTournament<M>> extends Model<
 		return get("start_datetime");
 	}
 
-	public M setEndDatetime(java.util.Date endDatetime) {
-		set("end_datetime", endDatetime);
+	public M setEdnDatetime(java.util.Date ednDatetime) {
+		set("edn_datetime", ednDatetime);
 		return (M)this;
 	}
 
-	public java.util.Date getEndDatetime() {
-		return get("end_datetime");
+	public java.util.Date getEdnDatetime() {
+		return get("edn_datetime");
 	}
 
 	public M setCreateDatetime(java.util.Date createDatetime) {

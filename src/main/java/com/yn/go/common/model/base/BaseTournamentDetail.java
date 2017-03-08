@@ -45,6 +45,33 @@ public abstract class BaseTournamentDetail<M extends BaseTournamentDetail<M>> ex
 		return get("status");
 	}
 
+	public M setPayType(java.lang.Integer payType) {
+		set("pay_type", payType);
+		return (M)this;
+	}
+
+	public java.lang.Integer getPayType() {
+		return get("pay_type");
+	}
+
+	public M setPayAccount(java.lang.String payAccount) {
+		set("pay_account", payAccount);
+		return (M)this;
+	}
+
+	public java.lang.String getPayAccount() {
+		return get("pay_account");
+	}
+
+	public M setPayId(java.lang.Integer payId) {
+		set("pay_id", payId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getPayId() {
+		return get("pay_id");
+	}
+
 	public M setCreateDatetime(java.util.Date createDatetime) {
 		set("create_datetime", createDatetime);
 		return (M)this;
