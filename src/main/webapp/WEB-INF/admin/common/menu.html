@@ -1,0 +1,75 @@
+#define menu()
+<div class="sidebar" id="sidebar">
+	<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+					</script>
+
+
+
+	<ul class="nav nav-list">
+		<li class="active"><a href="index.html"> <i
+				class="icon-dashboard"></i> <span class="menu-text"> 控制台 </span>
+		</a></li>
+
+		<li><a href="/go/admin/tolist"> <i class="icon-text-width"></i>
+				<span class="menu-text"> 管理员管理</span>
+		</a></li>
+
+		<li><a href="#" class="dropdown-toggle"> <i
+				class="icon-desktop"></i> <span class="menu-text"> 用户管理 </span> <b
+				class="arrow icon-angle-down"></b>
+		</a>
+
+			<ul class="submenu">
+				<li><a href="/go/admin/user/tolist?type=2"> <i
+						class="icon-double-angle-right"></i> 总教练
+				</a></li>
+
+				<li><a href="/go/admin/user/tolist?type=1"> <i
+						class="icon-double-angle-right"></i> 外聘老师
+				</a></li>
+
+				<li><a href="/go/admin/user/tolist?type=0"> <i
+						class="icon-double-angle-right"></i> 学员
+				</a></li>
+
+			</ul></li>
+
+		<li><a href="#" class="dropdown-toggle"> <i class="icon-list"></i>
+				<span class="menu-text"> 赛事管理 </span> <b
+				class="arrow icon-angle-down"></b>
+		</a>
+
+			<ul class="submenu">
+				<li><a href="/go/admin/tournament/tolist"> <i
+						class="icon-double-angle-right"></i> 赛事
+				</a></li>
+
+				<li><a href="jqgrid.html"> <i
+						class="icon-double-angle-right"></i> 用户赛事详情
+				</a></li>
+			</ul></li>
+   
+		<li><a href="/go/admin/news/tolist" class="dropdown-toggle"> <i class="icon-edit"></i>
+				<span class="menu-text"> 新闻管理 </span>
+
+
+		</a></li>
+
+		<li><a href="/go/admin/trainingAddress/tolist"> <i class="icon-list-alt"></i> <span
+				class="menu-text"> 培训点管理 </span>
+		</a></li>
+
+	</ul>
+	<!-- /.nav-list -->
+
+	<div class="sidebar-collapse" id="sidebar-collapse">
+		<i class="icon-double-angle-left" data-icon1="icon-double-angle-left"
+			data-icon2="icon-double-angle-right"></i>
+	</div>
+
+	<script type="text/javascript">
+						try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+					</script>
+</div>
+#end

@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import java.util.List;
+
+import com.jfinal.plugin.activerecord.Page;
 import com.yn.go.common.model.base.BaseAdmin;
 
 /**
@@ -9,12 +12,19 @@ import com.yn.go.common.model.base.BaseAdmin;
 public class Admin extends BaseAdmin<Admin> {
 	public static final Admin dao = new Admin().dao();
 	
-	public boolean checkAdminAndPassword(String name,String password){
+	public Admin checkAdminAndPassword(String name,String password){
 		
-		Admin admin = findFirst("select id from t_admin where name =? and password =?",name,password);
-		if(admin==null){
-			return false;
-		}
-		return true;
+		return findFirst("select id,type from t_admin where name =? and password =?",name,password);
+	}
+	
+	public List<Admin> listAll(int pageNumber,int pageSize){
+		return find("select * from t_admin order by id asc" );
+		//return paginate(pageNumber, pageSize, "", "");
+		
+	}
+	
+	public Page<Admin> paginate(int pageNumber,int pageSize){
+		return paginate(pageNumber, pageSize, "select *", " from t_admin order by id asc");
+		
 	}
 }

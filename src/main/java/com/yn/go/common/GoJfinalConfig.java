@@ -11,8 +11,12 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.template.Engine;
 import com.yn.go.admin.AdminController;
+import com.yn.go.admin.IndexController;
 import com.yn.go.admin.LoginController;
+import com.yn.go.admin.NewsController;
 import com.yn.go.admin.TournamentController;
+import com.yn.go.admin.TrainingAddressController;
+import com.yn.go.admin.UserController;
 import com.yn.go.common.model._MappingKit;
 
 public class GoJfinalConfig extends JFinalConfig{
@@ -33,11 +37,15 @@ public class GoJfinalConfig extends JFinalConfig{
 
 		@Override
 		public void config() {
-			setBaseViewPath("/admin");
+			setBaseViewPath("/WEB-INF/admin");
 			addInterceptor(new AdminInterceptor());
 			add("/admin", AdminController.class);
+			add("/admin/index", IndexController.class,"");
 			add("/admin/login", LoginController.class,"");
-			add("/admin/tournament", TournamentController.class);
+			add("/admin/tournament", TournamentController.class,"/tournament");
+			add("/admin/trainingAddress", TrainingAddressController.class,"/trainingAddress");
+			add("/admin/user", UserController.class,"/user");
+			add("/admin/news", NewsController.class,"/news");
 		}
 	}
 	
@@ -53,7 +61,8 @@ public class GoJfinalConfig extends JFinalConfig{
 
 	@Override
 	public void configEngine(Engine me) {
-		// TODO Auto-generated method stub
+		me.addSharedFunction("/WEB-INF/admin/common/head.html");
+		me.addSharedFunction("/WEB-INF/admin/common/menu.html");
 		
 	}
 

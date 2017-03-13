@@ -1,4 +1,4 @@
-jdbcUrl = jdbc:mysql://127.0.0.1:3306/go?zeroDateTimeBehavior=convertToNull
+jdbcUrl = jdbc:mysql://119.23.16.76:3306/go?zeroDateTimeBehavior=convertToNull
 user = root
 password =
 devMode = true

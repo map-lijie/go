@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.yn.go.common.model.base.BaseNews;
 
 /**
@@ -8,4 +11,8 @@ import com.yn.go.common.model.base.BaseNews;
 @SuppressWarnings("serial")
 public class News extends BaseNews<News> {
 	public static final News dao = new News().dao();
+	
+	public Page<Record> paginate(int pageNumber,int pageSize){
+		return Db.paginate(pageNumber, pageSize, "select a.*,c.name", "from t_news a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+	}
 }

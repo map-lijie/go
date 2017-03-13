@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.yn.go.common.model.base.BaseUser;
 
 /**
@@ -8,4 +11,14 @@ import com.yn.go.common.model.base.BaseUser;
 @SuppressWarnings("serial")
 public class User extends BaseUser<User> {
 	public static final User dao = new User().dao();
+	//,b.training_name as trainingName,b.id as trainingId left join t_training_address b on(a.id=b.user_id)
+	public Page<Record> paginate(int pageNumber,int pageSize,int type){
+		if(type==2)
+			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,c.name", "from t_user a  left join t_admin c on(a.admin_id=c.id) where a.type=2 order by a.id asc");
+		else if(type==1)
+			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime", "from t_user a   where a.type=1 order by a.id asc");
+		else if(type==0)
+			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,a.unit", "from t_user a   where a.type=0 order by a.id asc");
+		return null;
+	}
 }

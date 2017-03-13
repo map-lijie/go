@@ -7,17 +7,16 @@ import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
-import com.yn.go.common.model.Tournament;
+import com.yn.go.common.model.News;
 
-public class TournamentController extends Controller{
+public class NewsController extends Controller{
 
-	
 	public void tolist(){
-		render("tournament.html");
+		render("news.html");
 	}
 	
 	public void list(){
-		Page<Record> paginate = Tournament.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10));
+		Page<Record> paginate = News.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10));
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());
@@ -27,23 +26,33 @@ public class TournamentController extends Controller{
 	}
 	
 	
-	
 	public void save(){
 		String oper = getPara("oper");
 		String result = "success";
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		Map<String,Object> user = (Map)getSessionAttr("user");
 		try {
-			Tournament tournament = getBean(Tournament.class, "",true);
-			tournament.setAdminId((Integer)user.get("id"));
+			News news = getBean(News.class, "",true);
+			news.setAdminId((Integer)user.get("id"));
 			if("edit".equals(oper)){
-				tournament.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
+				/*StringBuilder sb =new StringBuilder();
+				sb.append("update  t_news set title=?,admin_id=?,description=?,update_datetime=?");
+				List<Object> params =Lists.newArrayList();
+				params.add(news.getTitle());
+				
+				params.add(news.getAdminId());
+				params.add(news.getDescription());
+				params.add(new Date());
+				sb.append(" where id=?");
+				params.add(news.getId());
+				Db.update(sb.toString(), params.toArray());*/
+				news.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
 			}else if("del".equals(oper)){
-				tournament.deleteById(tournament.getId());
+				news.deleteById(news.getId());
 			}else{
-				tournament.setCreateDatetime(new Date());
-				tournament.setUpdateDatetime(new Date());
-				tournament.save();
+				news.setCreateDatetime(new Date());
+				news.setUpdateDatetime(new Date());
+				news.save();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

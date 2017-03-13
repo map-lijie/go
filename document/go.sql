@@ -29,8 +29,8 @@ create table t_admin
    type                 int comment '0-最高权限管理员
             1-二级管理员
             2-三级管理员',
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 
@@ -46,8 +46,8 @@ create table t_news
    description          longtext,
    type                 int,
    admin_id             int,
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 
@@ -68,8 +68,8 @@ create table t_tournament
             1-赛事关闭',
    start_datetime       datetime,
    edn_datetime         datetime,
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 
@@ -89,8 +89,8 @@ create table t_tournament_detail
             2-现金',
    pay_account          varchar(50),
    pay_id               int,
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 
@@ -106,8 +106,8 @@ create table t_training_address
    address              varchar(255),
    user_id              int,
    admin_id             int,
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 
@@ -133,8 +133,8 @@ create table t_user
    unit                 varchar(50),
    certificate_number   varchar(50),
    certificate_datetime datetime,
-   create_datetime      datetime default CURRENT_TIMESTAMP(),
-   update_datetime      datetime default CURRENT_TIMESTAMP(),
+   create_datetime      datetime,
+   update_datetime      datetime,
    primary key (id)
 );
 

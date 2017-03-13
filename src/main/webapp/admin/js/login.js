@@ -21,7 +21,7 @@ $(function(){
 			},
 			success : function(data) {
 				if(data.errcode==0){
-					
+					location.href=projectName+"/admin/index";
 				}else{
 					alert(data.errmsg);
 				}

@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.yn.go.common.model.base.BaseTrainingAddress;
 
 /**
@@ -8,4 +11,8 @@ import com.yn.go.common.model.base.BaseTrainingAddress;
 @SuppressWarnings("serial")
 public class TrainingAddress extends BaseTrainingAddress<TrainingAddress> {
 	public static final TrainingAddress dao = new TrainingAddress().dao();
+	
+	public Page<Record> paginate(int pageNumber,int pageSize){
+		return Db.paginate(pageNumber, pageSize, "select a.id,a.address,a.user_id as userId,a.training_name as trainingName,b.user_name as userName,c.name", "from t_training_address a left join t_user b on(a.user_id =b.id) left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+	}
 }

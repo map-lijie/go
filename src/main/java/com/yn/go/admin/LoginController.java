@@ -22,10 +22,13 @@ public class LoginController extends Controller{
 			String name = getPara("name");
 			String password = getPara("password");
 			if(!Strings.isNullOrEmpty(name)&&!Strings.isNullOrEmpty(password)){
-				if(Admin.dao.checkAdminAndPassword(name, password)){
+				Admin admin = Admin.dao.checkAdminAndPassword(name, password);
+				if(admin!=null){
 					//保存session  
 					Map<String,Object> user =Maps.newHashMap();
 					user.put("name", name);
+					user.put("id", admin.getId());
+					user.put("type", admin.getType());
 					user.put("token", UUID.randomUUID().toString());
 					user.put("createDatetime", System.currentTimeMillis());
 					setSessionAttr("user",user);
