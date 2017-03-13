@@ -67,7 +67,7 @@ create table t_tournament
    status               int comment '0-可以进行报名
             1-赛事关闭',
    start_datetime       datetime,
-   edn_datetime         datetime,
+   end_datetime         datetime,
    create_datetime      datetime,
    update_datetime      datetime,
    primary key (id)
