@@ -19,8 +19,8 @@ public class UserController extends Controller{
 	
 	public void tolist(){
 		int type = getParaToInt("type",2);
-		System.out.println(type);
 		setAttr("type", type);
+		setAttr("active", "user");
 		render("user.html");
 	}
 	
@@ -49,8 +49,8 @@ public class UserController extends Controller{
 		Map<String,Object> users = (Map)getSessionAttr("user");
 		try {
 			User user = getBean(User.class, "",true);
-			if(user.getPassward()!=null)
-				user.setPassward(SHA1Util.getSha1(user.getPassward()));
+			if(user.getPassword()!=null)
+				user.setPassword(SHA1Util.getSha1(user.getPassword()));
 			user.setAdminId((Integer)users.get("id"));
 			if("edit".equals(oper)){
 				user.setUpdateDatetime(new Date()).removeNullValueAttrs().update();

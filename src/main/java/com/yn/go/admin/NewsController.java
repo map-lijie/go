@@ -12,6 +12,7 @@ import com.yn.go.common.model.News;
 public class NewsController extends Controller{
 
 	public void tolist(){
+		setAttr("active", "news");
 		render("news.html");
 	}
 	

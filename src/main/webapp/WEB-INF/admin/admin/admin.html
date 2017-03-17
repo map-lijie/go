@@ -80,15 +80,6 @@
 								管理员管理
 							</li>
 						</ul><!-- .breadcrumb -->
-
-						<div class="nav-search" id="nav-search">
-							<form class="form-search">
-								<span class="input-icon">
-									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-									<i class="icon-search nav-search-icon"></i>
-								</span>
-							</form>
-						</div><!-- #nav-search -->
 					</div>
 
 					<div class="page-content">
@@ -197,11 +188,11 @@
 					colNames:[' ', '编号','用户名','手机号', '地址', '管理员类型'],
 					colModel:[
 						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: true},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
 						{name:'name',index:'name',width:90, editable:true},
 						{name:'phone',index:'phone', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
 						{name:'address',index:'address', width:70, editable: true},
-						{name:'type',index:'type', width:90, editable: true,formatter:adminFmatter,edittype:"select",editoptions:{value:"0:总管理员;1:一级管理员;2:二级管理员"}}
+						{name:'type',index:'type', width:90, editable: true,formatter:adminFmatter,edittype:"select",editoptions:{value:"1:一级管理员;2:二级管理员"}}
 					], 
 			
 					viewrecords : true,
@@ -240,27 +231,6 @@
 						return "二级管理员";
 					}
 				}
-				//enable search/filter toolbar
-				//jQuery(grid_selector).jqGrid('filterToolbar',{defaultSearch:true,stringResult:true})
-			
-				//switch element when editing inline
-				function aceSwitch( cellvalue, options, cell ) {
-					setTimeout(function(){
-						$(cell) .find('input[type=checkbox]')
-								.wrap('<label class="inline" />')
-							.addClass('ace ace-switch ace-switch-5')
-							.after('<span class="lbl"></span>');
-					}, 0);
-				}
-				//enable datepicker
-				function pickDate( cellvalue, options, cell ) {
-					setTimeout(function(){
-						$(cell) .find('input[type=text]')
-								.datepicker({format:'yyyy-mm-dd' , autoclose:true}); 
-					}, 0);
-				}
-			
-			
 				//navButtons
 				jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 					{ 	//navbar options
@@ -280,9 +250,15 @@
 						closeAfterEdit: true,
 						recreateForm: true,
 						beforeShowForm : function(e) {
+							//console.log(e);
 							var form = $(e[0]);
 							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
 							editHtml(form);
+						},
+						onclickPgButtons : function (whichbutton, formid, rowid) {
+							console.log(formid);
+							console.log(rowid);
+							alert("1");
 						}
 					},
 					{
@@ -315,35 +291,33 @@
 				)
 		
 				function addHtml(form){
-					form.find("input[name=id]").closest("tr").remove();
 					style_edit_form(form);
 				}
 				function editHtml(form){
-					form.find("input[name=id]").closest("tr").css('display', 'none');
+					var id =parseInt(form.find("input[name=grid-table_id]").val());
+					//debugger;
+					//console.log(#(session.user.id));
+					//console.log(#(session.user.type));
+					#if(session.user.type==0)
+						if(#(session.user.id)==id)
+							form.find("select[name=type]").closest("tr").remove();
+					#end			
 					style_edit_form(form);
 				}
 				
 				function style_edit_form(form) {
-					//enable datepicker on "sdate" field and switches for "stock" field
-					/* form.find('input[name=sdate]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
-						.end().find('input[name=stock]')
-							  .addClass('ace ace-switch ace-switch-5').wrap('<label class="inline" />').after('<span class="lbl"></span>');
-			 */
 					//update buttons classes
 					var $tr =form.find("input[name=name]").closest("tr");
 			 		var $clonedTr = $tr.clone();
 			 		$clonedTr.find(".CaptionTD").text("密码");
 			 		$clonedTr.find(".DataTD").html('<input class="FormElement ui-widget-content ui-corner-all" role="textbox" name="password" id="password" type="password">');
 			 		$tr.after($clonedTr);
+			 		//alert($("#type").val());
 					var buttons = form.next().find('.EditButton .fm-button');
 					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon
 					buttons.eq(0).addClass('btn-primary').prepend('<i class="icon-ok"></i>');
 					buttons.eq(1).prepend('<i class="icon-remove"></i>')
-					
-					buttons = form.next().find('.navButton a');
 					buttons.find('.ui-icon').remove();
-					buttons.eq(0).append('<i class="icon-chevron-left"></i>');
-					buttons.eq(1).append('<i class="icon-chevron-right"></i>');		
 				}
 			
 				function style_delete_form(form) {

@@ -156,25 +156,71 @@
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
 				var pager_selector = "#grid-pager";
-			
+				var userId ='';
+				 function getChiefCoachNames(){  
+				        var tmp="";  
+				        $.ajax({  
+					        type:"post",  
+					        async:false,  
+					        url:$path_base+"admin/user/listAll",  
+					        success:function(data){  
+					        if (data != null) {  
+					        	 var tmpObj=data;
+				                var length=tmpObj.length;  
+				                for(var i=0;i<length;i++){  
+				                	if(i==0)
+				                		userId =tmpObj[i].id;
+				                    if(i!=length-1){  
+				                    	tmp +=tmpObj[i].id+':'+tmpObj[i].userName+';';
+				                    }else{  
+				                    	tmp +=tmpObj[i].id+':'+tmpObj[i].userName;
+				                    }  
+				          
+				                 }     
+				             }  
+					        }  
+					        });  
+				         return tmp;  
+				        } 
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
 					url : $path_base+"admin/user/list?type=#(type)",
 					datatype: "json",
 					height: 250,
-					colNames:[' ', '编号','用户名','手机号码','级段位', '身份证','微信', 'QQ','证书编号', '证书时间', '发布人'],
+					colNames:[' ', '编号','用户名','手机号码','级段位', '身份证','微信', 'QQ','证书编号', '证书时间'
+						        #if(type==2)	
+						         , '发布人'
+						        #end
+					            #if(type!=2)
+									,'总教练'
+									,'培训地点'
+								#end
+								#if(type==0)
+									,'单位或学校'
+								#end
+					          ,'创建时间'],
 					colModel:[
 						{name:'myac',index:'', width:20, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'userName',index:'userName',width:90, editable:true},
-						{name:'phone',index:'phone',width:90, editable:true},
+						{name:'id',index:'id', width:30, sorttype:"int", editable: false},
+						{name:'userName',index:'userName',width:60, editable:true},
+						{name:'phone',index:'phone',width:60, editable:true},
 						{name:'danGrading',index:'danGrading',width:50,editable:true,formatter:danGradingFormatter,edittype:"select",editoptions:{value:"5:五级;4:四级;3:三级;2:二级;1:一级;11:一段;12:二段;13:三段;14:四段;15:五段;16:六段"}},
-						{name:'card',index:'card',width:90, editable:true},
+						{name:'card',index:'card',width:60, editable:true},
 						{name:'wechat',index:'wechat', width:60,editable: true},
 						{name:'qq',index:'qq',width:60,editable: true},
 						{name:'certificateNumber',index:'certificateNumber', width:70, editable: true},
-						{name:'certificateDatetime',index:'certificateDatetime', width:70, editable: true},
-						{name:'name',index:'name', width:90, editable: false}
+						{name:'certificateDatetime',index:'certificateDatetime',formatter:'date',formatoptions: {newformat:'Y-m-d'},width:70, editable: true,editoptions:{readonly:true,required:true} }
+						#if(type==2)
+							,{name:'name',index:'name', width:50, editable: false}
+						#end
+						#if(type!=2)
+							,{name:'chiefCoachName',index:'chiefCoachName', width:70, editable: true,edittype:"select",editoptions:{value:getChiefCoachNames()}}
+							,{name:'trainingName',index:'trainingName', width:70, editable: true,edittype:"select",editoptions:{value:'"":""'}}
+						#end
+						#if(type==0)
+							,{name:'unit',index:'unit', width:70, editable: true,}
+						#end
+						,{name:'createDatetime',index:'createDatetime', width:70, editable: false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -259,12 +305,14 @@
 							editHtml(form);
 						},
 						onclickSubmit: function(params, posdata) {
+							#if(type==2)
 							var taIdsArr=$("#taIds").val();
 							var taIds='';
 							for(var i=0;i<taIdsArr.length;i++){
 								taIds =taIds+taIdsArr[i]+',';
 							}
 							posdata.taIds=taIds;
+							#end
 							console.log(posdata);
                         }
 					},
@@ -279,12 +327,14 @@
 							addHtml(form);
 						},
 						onclickSubmit: function(params, posdata) {
-							var taIdsArr=$("#taIds").val();
-							var taIds='';
-							for(var i=0;i<taIdsArr.length;i++){
-								taIds =taIds+taIdsArr[i]+',';
-							}
-							posdata.taIds=taIds;
+							#if(type==2)
+								var taIdsArr=$("#taIds").val();
+								var taIds='';
+								for(var i=0;i<taIdsArr.length;i++){
+									taIds =taIds+taIdsArr[i]+',';
+								}
+								posdata.taIds=taIds;
+							#end
 							console.log(posdata);
                         }
 					},
@@ -305,7 +355,7 @@
 						}
 					}
 				)
-		
+				
 				function addHtml(form){
 					style_edit_form(form);
 				}
@@ -314,52 +364,84 @@
 				}
 				
 				function style_edit_form(form) {
-					var id=form.find("input[name=grid-table_id]").val();
-					var $trta =form.find("select[name=danGrading]").closest("tr");
-			 		var $clonedTrta = $trta.clone();
-			 		$clonedTrta.find(".CaptionTD").text("培训地点");
-					var selectStr ='<select class="form-control" role="select"  name="taIds" id="taIds"   multiple="multiple">';
-					$.ajax({
-					    url:$path_base+'admin/trainingAddress/listAll',
-					    type:'get', 
-					    async:true,    
-					    timeout:5000,
-					    dataType:'json',
-					    success:function(data,textStatus,jqXHR){
-					    	console.log(data);
-					    	for(var i=0;i<data.length;i++){
-					    		console.log(parseInt(id)===parseInt(data[i].userId));
-					    		if(parseInt(id)===parseInt(data[i].userId)){
-					    			selectStr =selectStr+'<option role="option"  selected = "selected" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
-					    		}else{
-					    			selectStr =selectStr+'<option role="option" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
-					    		}
-					    	}
-					    	selectStr =selectStr+'</select>';
-					    	$clonedTrta.find(".DataTD").html(selectStr);
-							$trta.after($clonedTrta);
-							form.find('input[name=certificateDatetime]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
-							var $tr =form.find("input[name=userName]").closest("tr");
-					 		var $clonedTr = $tr.clone();
-					 		$clonedTr.find(".CaptionTD").text("密码");
-					 		$clonedTr.find(".DataTD").html('<input class="FormElement ui-widget-content ui-corner-all" role="textbox" name="passward" id="passward" type="password">');
-					 		$tr.after($clonedTr);
-							//update buttons classes
-							var buttons = form.next().find('.EditButton .fm-button');
-							buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon
-							buttons.eq(0).addClass('btn-primary').prepend('<i class="icon-ok"></i>');
-							buttons.eq(1).prepend('<i class="icon-remove"></i>')
-							buttons = form.next().find('.navButton a');
-							buttons.find('.ui-icon').remove();
-							buttons.eq(0).append('<i class="icon-chevron-left"></i>');
-							buttons.eq(1).append('<i class="icon-chevron-right"></i>');	
-					    },
-					    error:function(xhr,textStatus){
-					       alert("请重试！！！")
-					    }
-					});
+					#if(type==2)
+						var id=form.find("input[name=grid-table_id]").val();
+						var $trta =form.find("select[name=danGrading]").closest("tr");
+				 		var $clonedTrta = $trta.clone();
+				 		$clonedTrta.find(".CaptionTD").text("培训地点");
+						var selectStr ='<select class="form-control" role="select"  name="taIds" id="taIds"   multiple="multiple">';
+						$.ajax({
+						    url:$path_base+'admin/trainingAddress/listAll',
+						    type:'get', 
+						    async:true,    
+						    timeout:5000,
+						    dataType:'json',
+						    success:function(data,textStatus,jqXHR){
+						    	console.log(data);
+						    	for(var i=0;i<data.length;i++){
+						    		console.log(parseInt(id)===parseInt(data[i].userId));
+						    		if(parseInt(id)===parseInt(data[i].userId)){
+						    			selectStr =selectStr+'<option role="option"  selected = "selected" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
+						    		}else{
+						    			selectStr =selectStr+'<option role="option" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
+						    		}
+						    	}
+						    	selectStr =selectStr+'</select>';
+						    	$clonedTrta.find(".DataTD").html(selectStr);
+								$trta.after($clonedTrta);
+						    },
+						    error:function(xhr,textStatus){
+						       alert("请重试！！！")
+						    }
+						});
+					#end
+					#if(type!=2)
+						form.find("select[name=chiefCoachName]").attr("name","chiefCoachId").attr("id","chiefCoachId");
+					    form.find("select[name=trainingName]").attr("name","trainingAddressId").attr("id","trainingAddressId");
+					    //alert();
+					    trainingAddressSelect($("select[name=chiefCoachId]").val())
+					    $("select[name=chiefCoachId]").on('change',function() {
+						    //alert("1");
+					    	 trainingAddressSelect($(this).val());
+					   });
+					 #end
+					form.find('input[name=certificateDatetime]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
+					var $tr =form.find("input[name=userName]").closest("tr");
+			 		var $clonedTr = $tr.clone();
+			 		$clonedTr.find(".CaptionTD").text("密码");
+			 		$clonedTr.find(".DataTD").html('<input class="FormElement ui-widget-content ui-corner-all" role="textbox" name="password" id="password" type="password">');
+			 		$tr.after($clonedTr);
+					//update buttons classes
+					var buttons = form.next().find('.EditButton .fm-button');
+					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon
+					buttons.eq(0).addClass('btn-primary').prepend('<i class="icon-ok"></i>');
+					buttons.eq(1).prepend('<i class="icon-remove"></i>')
+					//buttons = form.next().find('.navButton a');
+					buttons.find('.ui-icon').remove();
+					//buttons.eq(0).append('<i class="icon-chevron-left"></i>');
+					//buttons.eq(1).append('<i class="icon-chevron-right"></i>');	
 				}
-			
+				
+				function trainingAddressSelect(userId){
+					 $("select[name=trainingAddressId]").empty();
+					     $.ajax({  
+				        type:"post",  
+				        async:false,  
+				        data:{"userId":userId},
+				        url:$path_base+"admin/trainingAddress/queryByUserId",  
+				        success:function(data){  
+				        if (data != null) {
+				        	 var tmpObj=data;
+			                var length=tmpObj.length;
+			                var tmp='';
+			                for(var i=0;i<length;i++){  
+			                	tmp +='<option value="'+tmpObj[i].id+'" role="option">'+tmpObj[i].trainingName+'</option>';
+			                 }     
+			                $("select[name=trainingAddressId]").html(tmp);
+			             }  
+				        }  
+				        });  
+				}
 				function style_delete_form(form) {
 					var buttons = form.next().find('.EditButton .fm-button');
 					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon

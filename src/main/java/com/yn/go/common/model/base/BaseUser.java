@@ -27,13 +27,13 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("user_name");
 	}
 
-	public M setPassward(java.lang.String passward) {
-		set("passward", passward);
+	public M setPassword(java.lang.String password) {
+		set("password", password);
 		return (M)this;
 	}
 
-	public java.lang.String getPassward() {
-		return get("passward");
+	public java.lang.String getPassword() {
+		return get("password");
 	}
 
 	public M setPhone(java.lang.String phone) {
@@ -142,6 +142,24 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 
 	public java.util.Date getUpdateDatetime() {
 		return get("update_datetime");
+	}
+
+	public M setChiefCoachId(java.lang.Integer chiefCoachId) {
+		set("chief_coach_id", chiefCoachId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getChiefCoachId() {
+		return get("chief_coach_id");
+	}
+
+	public M setTrainingAddressId(java.lang.Integer trainingAddressId) {
+		set("training_address_id", trainingAddressId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getTrainingAddressId() {
+		return get("training_address_id");
 	}
 
 }

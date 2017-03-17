@@ -7,41 +7,41 @@
 
 
 	<ul class="nav nav-list">
-		<li class="active"><a href="index.html"> <i
+		<li #if(!(active??))class="active" #end><a href="/go/admin/index"> <i
 				class="icon-dashboard"></i> <span class="menu-text"> 控制台 </span>
 		</a></li>
 
-		<li><a href="/go/admin/tolist"> <i class="icon-text-width"></i>
+		<li #if(active=='admin') class="active" #end><a href="/go/admin/tolist"> <i class="icon-text-width"></i>
 				<span class="menu-text"> 管理员管理</span>
 		</a></li>
 
-		<li><a href="#" class="dropdown-toggle"> <i
+		<li #if(active=='user') class="active" #end><a href="#" class="dropdown-toggle"> <i
 				class="icon-desktop"></i> <span class="menu-text"> 用户管理 </span> <b
 				class="arrow icon-angle-down"></b>
 		</a>
 
 			<ul class="submenu">
-				<li><a href="/go/admin/user/tolist?type=2"> <i
+				<li #if(active=='user'&&type==2) class="active" #end><a href="/go/admin/user/tolist?type=2"> <i
 						class="icon-double-angle-right"></i> 总教练
 				</a></li>
 
-				<li><a href="/go/admin/user/tolist?type=1"> <i
+				<li #if(active=='user'&&type==1) class="active" #end><a href="/go/admin/user/tolist?type=1"> <i
 						class="icon-double-angle-right"></i> 外聘老师
 				</a></li>
 
-				<li><a href="/go/admin/user/tolist?type=0"> <i
+				<li #if(active=='user'&&type==0) class="active" #end><a href="/go/admin/user/tolist?type=0"> <i
 						class="icon-double-angle-right"></i> 学员
 				</a></li>
 
 			</ul></li>
 
-		<li><a href="#" class="dropdown-toggle"> <i class="icon-list"></i>
+		<li #if(active=='tournament') class="active" #end><a href="#" class="dropdown-toggle"> <i class="icon-list"></i>
 				<span class="menu-text"> 赛事管理 </span> <b
 				class="arrow icon-angle-down"></b>
 		</a>
 
 			<ul class="submenu">
-				<li><a href="/go/admin/tournament/tolist"> <i
+				<li #if(active=='tournament') class="active" #end><a href="/go/admin/tournament/tolist"> <i
 						class="icon-double-angle-right"></i> 赛事
 				</a></li>
 
@@ -50,13 +50,13 @@
 				</a></li>
 			</ul></li>
    
-		<li><a href="/go/admin/news/tolist" class="dropdown-toggle"> <i class="icon-edit"></i>
+		<li #if(active=='news') class="active" #end ><a href="/go/admin/news/tolist" class="dropdown-toggle"> <i class="icon-edit"></i>
 				<span class="menu-text"> 新闻管理 </span>
 
 
 		</a></li>
 
-		<li><a href="/go/admin/trainingAddress/tolist"> <i class="icon-list-alt"></i> <span
+		<li #if(active=='trainingAddress') class="active" #end><a href="/go/admin/trainingAddress/tolist"> <i class="icon-list-alt"></i> <span
 				class="menu-text"> 培训点管理 </span>
 		</a></li>
 

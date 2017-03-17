@@ -81,13 +81,13 @@ public abstract class BaseTournament<M extends BaseTournament<M>> extends Model<
 		return get("start_datetime");
 	}
 
-	public M setEdnDatetime(java.util.Date ednDatetime) {
-		set("edn_datetime", ednDatetime);
+	public M setEndDatetime(java.util.Date endDatetime) {
+		set("end_datetime", endDatetime);
 		return (M)this;
 	}
 
-	public java.util.Date getEdnDatetime() {
-		return get("edn_datetime");
+	public java.util.Date getEndDatetime() {
+		return get("end_datetime");
 	}
 
 	public M setCreateDatetime(java.util.Date createDatetime) {

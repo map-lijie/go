@@ -13,6 +13,6 @@ public class News extends BaseNews<News> {
 	public static final News dao = new News().dao();
 	
 	public Page<Record> paginate(int pageNumber,int pageSize){
-		return Db.paginate(pageNumber, pageSize, "select a.*,c.name", "from t_news a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+		return Db.paginate(pageNumber, pageSize, "select a.*,a.create_datetime as createDatetime,c.name", "from t_news a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
 	}
 }

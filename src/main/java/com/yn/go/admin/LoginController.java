@@ -10,7 +10,7 @@ import com.jfinal.core.Controller;
 import com.yn.go.common.AdminInterceptor;
 import com.yn.go.common.model.Admin;
 
-
+//@Before(SessionInViewInterceptor.class)
 public class LoginController extends Controller{
 
 	@Clear(AdminInterceptor.class)
@@ -70,7 +70,8 @@ public class LoginController extends Controller{
 		}
 		resultMap.put("errcode", errcode);
 		resultMap.put("errmsg", errmsg);
-		renderJson(resultMap);
+		//renderJson(resultMap);
+		render("/admin/login.html");
 	}
 	
 }

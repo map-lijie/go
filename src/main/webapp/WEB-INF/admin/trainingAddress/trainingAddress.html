@@ -79,16 +79,6 @@
 					</ul>
 					<!-- .breadcrumb -->
 
-					<div class="nav-search" id="nav-search">
-						<form class="form-search">
-							<span class="input-icon"> <input type="text"
-								placeholder="Search ..." class="nav-search-input"
-								id="nav-search-input" autocomplete="off" /> <i
-								class="icon-search nav-search-icon"></i>
-							</span>
-						</form>
-					</div>
-					<!-- #nav-search -->
 				</div>
 
 				<div class="page-content">
@@ -179,6 +169,7 @@
 					        if (data != null) {  
 					        	 var tmpObj=data;
 				                var length=tmpObj.length;  
+				                tmp +=''+':'+'请选择;'
 				                for(var i=0;i<length;i++){  
 				                	
 				                    if(i!=length-1){  
@@ -292,14 +283,15 @@
 				
 				function style_edit_form(form) {
 					//update buttons classes
+					form.find("select[name=userName]").attr("name","userId").attr("id","userId");
 					var buttons = form.next().find('.EditButton .fm-button');
 					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon
 					buttons.eq(0).addClass('btn-primary').prepend('<i class="icon-ok"></i>');
 					buttons.eq(1).prepend('<i class="icon-remove"></i>')
-					buttons = form.next().find('.navButton a');
+					//buttons = form.next().find('.navButton a');
 					buttons.find('.ui-icon').remove();
-					buttons.eq(0).append('<i class="icon-chevron-left"></i>');
-					buttons.eq(1).append('<i class="icon-chevron-right"></i>');		
+					//buttons.eq(0).append('<i class="icon-chevron-left"></i>');
+					//buttons.eq(1).append('<i class="icon-chevron-right"></i>');		
 				}
 			
 				function style_delete_form(form) {

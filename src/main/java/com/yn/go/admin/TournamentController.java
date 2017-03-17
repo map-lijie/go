@@ -13,6 +13,7 @@ public class TournamentController extends Controller{
 
 	
 	public void tolist(){
+		setAttr("active", "tournament");
 		render("tournament.html");
 	}
 	

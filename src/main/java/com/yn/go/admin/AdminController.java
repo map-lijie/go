@@ -16,6 +16,7 @@ public class AdminController extends Controller{
 
 	
 	public void tolist(){
+		setAttr("active", "admin");
 		render("admin.html");
 	}
 	
@@ -40,22 +41,10 @@ public class AdminController extends Controller{
 			if(admin.getPassword()!=null)
 				admin.setPassword(SHA1Util.getSha1(admin.getPassword()));
 			if("edit".equals(oper)){
-				StringBuilder sb =new StringBuilder();
-				sb.append("update  t_admin set name=?,type=?,phone=?,address=?,update_datetime=?");
-				List<Object> params =Lists.newArrayList();
-				params.add(admin.getName());
-				params.add(admin.getType());
-				params.add(admin.getPhone());
-				params.add(admin.getAddress());
-				params.add(new Date());
+				Map<String,Object> user = (Map)getSessionAttr("user");
+				Integer id = (Integer) user.get("id");
 				
-				if(admin.getPassword()!=null){
-					sb.append(",password=?");
-					params.add(admin.getPassword());
-				}
-				sb.append(" where id=?");
-				params.add(admin.getId());
-				Db.update(sb.toString(), params.toArray());
+				admin.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
 			}else if("del".equals(oper)){
 				admin.deleteById(admin.getId());
 			}else{
