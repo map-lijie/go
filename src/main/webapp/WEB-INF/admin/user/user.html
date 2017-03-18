@@ -286,8 +286,12 @@
 					{ 	//navbar options
 						edit: true,
 						editicon : 'icon-pencil blue',
-						add: true,
-						addicon : 'icon-plus-sign purple',
+						#if(type==2)
+							add: true,
+							addicon : 'icon-plus-sign purple',
+						#else
+							add: false,
+						#end
 						del: true,
 						delicon : 'icon-trash red',
 						search: false,

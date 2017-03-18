@@ -18,13 +18,13 @@ public abstract class BaseTournamentDetail<M extends BaseTournamentDetail<M>> ex
 		return get("id");
 	}
 
-	public M setName(java.lang.Integer name) {
-		set("name", name);
+	public M setTId(java.lang.Integer tId) {
+		set("t_id", tId);
 		return (M)this;
 	}
 
-	public java.lang.Integer getName() {
-		return get("name");
+	public java.lang.Integer getTId() {
+		return get("t_id");
 	}
 
 	public M setUserId(java.lang.Integer userId) {
@@ -63,13 +63,13 @@ public abstract class BaseTournamentDetail<M extends BaseTournamentDetail<M>> ex
 		return get("pay_account");
 	}
 
-	public M setPayId(java.lang.Integer payId) {
-		set("pay_id", payId);
+	public M setAPayerId(java.lang.Integer aPayerId) {
+		set("a_payer_id", aPayerId);
 		return (M)this;
 	}
 
-	public java.lang.Integer getPayId() {
-		return get("pay_id");
+	public java.lang.Integer getAPayerId() {
+		return get("a_payer_id");
 	}
 
 	public M setCreateDatetime(java.util.Date createDatetime) {
@@ -88,6 +88,15 @@ public abstract class BaseTournamentDetail<M extends BaseTournamentDetail<M>> ex
 
 	public java.util.Date getUpdateDatetime() {
 		return get("update_datetime");
+	}
+
+	public M setFPayerId(java.lang.Integer fPayerId) {
+		set("f_payer_id", fPayerId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getFPayerId() {
+		return get("f_payer_id");
 	}
 
 }

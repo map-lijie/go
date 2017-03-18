@@ -21,4 +21,8 @@ public class User extends BaseUser<User> {
 			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.unit,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,a.chief_coach_id as chiefCoachId,a.training_address_id as trainingAddressId,b.user_name as chiefCoachName,c.training_name as trainingName", "from t_user a left join t_user b on(a.chief_coach_id=b.id) left join t_training_address c on(a.training_address_id=c.id) where a.type=0 order by a.id asc");
 		return null;
 	}
+	
+    public User checkUserAndPassword(String name,String password){
+		return findFirst("select id,type from t_user where user_name =? and password =?",name,password);
+	}
 }

@@ -2,13 +2,19 @@ package com.yn.go.common;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
+import com.jfinal.core.Controller;
 
 public class FrontInterceptor implements Interceptor {
 
 	@Override
 	public void intercept(Invocation inv) {
-		// TODO Auto-generated method stub
-
+		Controller controller = inv.getController();
+		Object user = controller.getSessionAttr("frontuser");
+		if(user!=null){
+			inv.invoke();
+		}else{
+			controller.redirect("/login.html");
+		}
 	}
 
 }

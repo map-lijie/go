@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
 import com.yn.go.common.model.base.BaseTournamentDetail;
 
 /**
@@ -8,4 +11,17 @@ import com.yn.go.common.model.base.BaseTournamentDetail;
 @SuppressWarnings("serial")
 public class TournamentDetail extends BaseTournamentDetail<TournamentDetail> {
 	public static final TournamentDetail dao = new TournamentDetail().dao();
+
+	public Page<Record> paginate(int pageNumber, int pageSize) {
+		String select = "SELECT"
+				+ "a.id,a.pay_type as payType,a.`status`,a.create_datetime as createDatetime,a.t_id as tId,a.payAccount as pay_account,b.user_name AS payerUserName,"
+				+ "c.name,d.`name` as tournamentName,d.`status` as tournamentStatus,d.fee,"
+				+ "e.user_name AS userName ";
+		String sqlExceptSelect = " FROM t_tournament_detail a "
+				+ "LEFT JOIN t_user b ON (a.f_payer_id = b.id) "
+				+ "LEFT JOIN t_admin c ON (a.a_payer_id = c.id) "
+				+ "INNER JOIN t_tournament d ON(a.t_id=d.id) "
+				+ "INNER JOIN t_user e ON (a.user_id = e.id) ";
+		return Db.paginate(pageNumber, pageSize, select, sqlExceptSelect);
+	}
 }

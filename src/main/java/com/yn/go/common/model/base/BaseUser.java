@@ -162,4 +162,13 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("training_address_id");
 	}
 
+	public M setTearcherId(java.lang.Integer tearcherId) {
+		set("tearcher_id", tearcherId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getTearcherId() {
+		return get("tearcher_id");
+	}
+
 }
