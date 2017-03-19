@@ -27,7 +27,7 @@ public class UserController extends Controller{
 		String result = "success";
 		String imageUrl=null;
 		try {
-			UploadFile imageUrlFile =getFile("imageUrl", "/user/image", 1024*1000, "utf-8");
+			UploadFile imageUrlFile =getFile("userImage", "/user/image", 1024*1000, "utf-8");
 		//	UploadFile imageUrlFile  = getFile("imageUrl", "/image");
 			String uploadPath = imageUrlFile.getUploadPath()+"/"+UUID.randomUUID().toString()+".jpg";
 			File dest =new File(uploadPath);
