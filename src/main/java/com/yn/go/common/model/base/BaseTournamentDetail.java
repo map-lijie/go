@@ -99,4 +99,13 @@ public abstract class BaseTournamentDetail<M extends BaseTournamentDetail<M>> ex
 		return get("f_payer_id");
 	}
 
+	public M setOrderId(java.lang.String orderId) {
+		set("order_id", orderId);
+		return (M)this;
+	}
+
+	public java.lang.String getOrderId() {
+		return get("order_id");
+	}
+
 }

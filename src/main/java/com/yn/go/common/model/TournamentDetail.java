@@ -24,4 +24,9 @@ public class TournamentDetail extends BaseTournamentDetail<TournamentDetail> {
 				+ "INNER JOIN t_user e ON (a.user_id = e.id) ";
 		return Db.paginate(pageNumber, pageSize, select, sqlExceptSelect);
 	}
-}
+	
+	public boolean update(Record record){
+		return Db.update("t_tournament_detail", "order_id", record);
+		//return Db.update("update t_tournament_detail set status =11,set user_id=?,set", paras);
+	}
+} 

@@ -1,6 +1,7 @@
 package com.yn.go.common;
 
 import com.jfinal.config.Routes;
+import com.yn.go.alipay.AlipayController;
 import com.yn.go.front.ArticleController;
 import com.yn.go.front.IndexController;
 import com.yn.go.front.LoginController;
@@ -24,6 +25,7 @@ public class FrontRoutes extends Routes{
 		add("/news", NewsController.class,"");
 		add("/tournamentDetail", TournamentDetailController.class,"");
 		add("/article", ArticleController.class,"");
+		add("/alipay", AlipayController.class,"");
 	}
 	
 } 

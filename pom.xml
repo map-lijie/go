@@ -50,6 +50,23 @@
 			<artifactId>lombok</artifactId>
 			<version>1.16.4</version>
 		</dependency>
+		<dependency>
+			<groupId>com.pentahohub.nexus</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>20150820220052</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/alipay-sdk-java20170307171631.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<!-- <dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>servlet-api</artifactId>
+		    <version>3.0-alpha-1</version>
+		</dependency> -->
   </dependencies>
   <build>
     <finalName>go</finalName>
