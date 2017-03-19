@@ -1,13 +1,10 @@
 package com.yn.go.admin;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.yn.go.common.SHA1Util;
 import com.yn.go.common.model.Admin;
@@ -31,8 +28,29 @@ public class AdminController extends Controller{
 	
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void updatePasswd(){
+		String result = "0";
+		try {
+			String oldPasswd = SHA1Util.getSha1(getPara("oldPasswd"));
+			String newPasswd =SHA1Util.getSha1(getPara("newPasswd"));
+			Map<String,Object> user = (Map)getSessionAttr("user");
+			Integer id = (Integer) user.get("id");
+			int resultcode = Admin.dao.updatePassword(id, oldPasswd, newPasswd);
+			if(resultcode==0)
+				result = "1";
+			if(resultcode==1)
+				removeSessionAttr("user");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result ="-1";
+		}
+		Map<String,Object> resultMap =Maps.newHashMap();
+		resultMap.put("status", result);
+		renderJson(resultMap);
+	}
 	
-	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void save(){
 		String oper = getPara("oper");
 		String result = "success";
@@ -41,10 +59,12 @@ public class AdminController extends Controller{
 			if(admin.getPassword()!=null)
 				admin.setPassword(SHA1Util.getSha1(admin.getPassword()));
 			if("edit".equals(oper)){
+				admin.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
 				Map<String,Object> user = (Map)getSessionAttr("user");
 				Integer id = (Integer) user.get("id");
-				
-				admin.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
+				if(admin.getPassword()!=null&&id.intValue() ==admin.getId().intValue()){//修改自己的密码需要重登陆
+					removeSessionAttr("user");
+				}
 			}else if("del".equals(oper)){
 				admin.deleteById(admin.getId());
 			}else{

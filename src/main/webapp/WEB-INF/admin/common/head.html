@@ -1,4 +1,5 @@
 #define head()
+<link rel="stylesheet" href="http://119.23.16.76/go/admin/assets/css/jquery-ui-1.10.3.full.min.css" />
 <div class="navbar navbar-default" id="navbar">
 	<script type="text/javascript">
 				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
@@ -25,8 +26,9 @@
 
 					<ul
 						class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-						<!-- <li><a href="#"> <i class="icon-cog"></i> 设置
+						<li><a href="#" id="updatepasswd"> <i class="icon-cog"></i> 修改密码
 						</a></li>
+						<!-- 
 
 						<li><a href="#"> <i class="icon-user"></i> 个人资料
 						</a></li>
@@ -36,10 +38,111 @@
 						</a></li>
 					</ul></li>
 			</ul>
+			<div id="dialog-message" class="hide">
+				<form id ="updatePasswdForm" class="form-horizontal">
+					    <div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="oldPasswd">原密码</label>
+							<div class="col-sm-9">
+								<input type="password" id="oldPasswd" placeholder="Password" class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="newPasswd">新密码</label>
+							<div class="col-sm-9">
+								<input type="password" id="newPasswd" placeholder="Password" class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
+				</form>
+			</div>
 			<!-- /.ace-nav -->
 		</div>
 		<!-- /.navbar-header -->
 	</div>
 	<!-- /.container -->
 </div>
+<script type="text/javascript">
+	window.jQuery || document.write("<script src='http://119.23.16.76/go/admin/assets/js/jquery-2.0.3.min.js'>"+"<"+"script>");
+</script>
+<script src="http://119.23.16.76/go/admin/assets/js/bootstrap.min.js"></script>
+<script src="http://119.23.16.76/go/admin/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="http://119.23.16.76/go/admin/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript">
+jQuery(function($) {
+	$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+		_title: function(title) {
+			var $title = this.options.title || '&nbsp;'
+			if( ("title_html" in this.options) && this.options.title_html == true )
+				title.html($title);
+			else title.text($title);
+		}
+	}));
+	
+	$( "#updatepasswd" ).on('click', function(e) {
+		e.preventDefault();
+		$("#updatePasswdForm").find("input[type=password]").val('');
+		var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
+			modal: true,
+			title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='icon-ok'></i>修改密码</h4></div>",
+			title_html: true,
+			width:400,
+			buttons: [ 
+				{
+					text: "Cancel",
+					"class" : "btn btn-xs",
+					click: function() {
+						$( this ).dialog( "close" ); 
+					} 
+				},
+				{
+					text: "OK",
+					"class" : "btn btn-primary btn-xs",
+					click: function() {
+						var oldPasswd =$("#oldPasswd").val();
+						var newPasswd =$("#newPasswd").val();
+						var flag =false;
+						if(oldPasswd==''){
+							alert("原始密码不能为空!");
+						}else if(newPasswd==''){
+							alert("新密码不能为空!");
+						}else if(oldPasswd==newPasswd){
+							alert("原始密码和新密码相等!");
+						}else{
+							flag =true;
+						}
+						if(flag){
+							 $.ajax({  
+							        type:"post",  
+							        async:false,
+							        data:{'oldPasswd':oldPasswd,'newPasswd':newPasswd},
+							        url:"/go/admin/updatePasswd",  
+							        success:function(data){  
+								        if(data.status=='0'){
+								        	location.href='http://localhost:8080/go/admin/login.html';
+								        }else if(data.status=='1'){
+								        	alert("原密码错误!");
+								        }else{
+								        	alert("网络问题，请重试!");
+								        }
+							        }  
+							     });
+						}
+						//if(flag)
+							
+					} 
+				}
+			]
+		});
+	
+		/**
+		dialog.data( "uiDialog" )._title = function(title) {
+			title.html( this.options.title );
+		};
+		**/
+	});
+	
+	
+})
+</script>
 #end

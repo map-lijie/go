@@ -28,12 +28,10 @@ public class UserController extends Controller{
 		String imageUrl=null;
 		try {
 			UploadFile imageUrlFile =getFile("userImage", "/user/image", 1024*1000, "utf-8");
-		//	UploadFile imageUrlFile  = getFile("imageUrl", "/image");
 			String uploadPath = imageUrlFile.getUploadPath()+"/"+UUID.randomUUID().toString()+".jpg";
 			File dest =new File(uploadPath);
 			imageUrlFile.getFile().renameTo(dest);
 			imageUrl =UrlConstants.URL+"upload/user/image/"+dest.getName();
-			//imageUrlFile.getFile()
 		} catch (Exception e) {
 			e.printStackTrace();
 			result ="error";
