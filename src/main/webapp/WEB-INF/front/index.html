@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>云南省棋类协会</title>
-<meta name="description" content="">
-<meta name="keywords" content="">
+<title>首页</title>
+<meta name="description" content="云南省围棋协会 ">
+<meta name="keywords" content="云南省围棋协会">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
 <link href="css/styles.css" rel="stylesheet">
 <link rel="shortcut icon" href="./favicon.ico">
@@ -41,7 +41,7 @@
   </div>
   <div class="nav-bg">
     <ul class="nav">
-       <li><a class="active" href="index.html">首页</a></li>
+       <li><a class="active" href="index">首页</a></li>
       <li><a href="detail.html">协会见绍</a></li>
       <li><a href="news.html">新闻动态</a></li>
       <li><a href="match.html">赛事活动</a></li>
@@ -71,7 +71,11 @@
   <div class="hotmsg clearfix">
     <h2>通知消息：</h2>
     <p>
-       《Who Are You-围棋协会2017》是韩国KBS于2015年4月27日起播出的月火迷你连续剧，由白尚勋、金圣允执导，金贤贞、金敏贞编剧，金所炫、南柱赫、陆星材等主演。
+       #if(notice??)
+          #(notice.description)
+       #else
+                          暂无通知
+       #end
     </p>
   </div>
   <div class="news-moudle clearfix">
@@ -90,11 +94,16 @@
     <div class="news-info mr15" id="macher">
       <div class="title">赛事活动</div>
       <ul>
-        <li>
-            <a href="#">最新新闻最新新闻<img src="images/hot.gif" /></a>
-            <span>12-20</span>
+      	#for(sshd:saishihuodongList)
+      	   #if(for.index>=6)
+      	      #break
+      	   #end
+      		<li>
+            	<a href="#">#(sshd.title)<img src="images/hot.gif" /></a>
+            <span>#(sshd.createDatetime)</span>
         </li>
-        <li>
+      	#end
+        <!-- <li>
             <a href="#">最新新闻最新新闻最新新闻<img src="images/hot.gif" /></a>
             <span>12-20</span>
         </li>
@@ -113,17 +122,19 @@
         <li>
             <a href="#">最新新闻最新新闻最新最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="news-info" id="news">
       <div class="title">新闻动态</div>
       <ul>
+       #for(new:newsList)
         <li>
-            <a href="#">最新新闻最新新闻最新新闻最新新闻<img src="images/hot.gif" /></a>
-            <span>12-20</span>
+            <a href="#">#(new.title)<img src="images/hot.gif" /></a>
+            <span>#(new.createDatetime)</span>
         </li>
-        <li>
+        #end
+        <!-- <li>
             <a href="#">最新新闻最新新闻最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
         </li>
@@ -142,19 +153,23 @@
         <li>
             <a href="#">最新新闻最新新闻最新新闻最新新闻最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
   <div class="clearfix">
     <div class="left">
       <div class="title">最新公告</div>
+      #if(notice??)
       <div class="bbs-img">
-        <img src="images/banner.jpg" width="100%" />
+        <img src="#(notice.imageUrl)" width="100%" />
       </div>
       <div class="bbs">
-        公告，是指政府、团体对重大事件当众正式公布或者公开宣告，宣布。国务院2012年4月16日发布、2012年7月1日起施行的《党政机关公文处理工作条例》，对公告的使用表述为：“适用于向国内外宣布重要事项或者法定事项”,其中包含两方面的内容。
+        #(notice.description)
       </div>
+      #else
+                     暂无公告
+      #end
     </div>
     <div class="right">
       <div class="subbanner"><img src="images/banner2.jpg" width="100%" height="80" /></div>
@@ -179,7 +194,13 @@
     <div class="title">活动赛事</div>
     <div class="box-list" id="Marquee_xxx">
       <ul class="img-lists clearfix">
+        #for(sshd:saishihuodongList)
         <li>
+          <img alt="" src="#(sshd.imageUrl)" width="100%" />
+          <a href="#" class="">#(sshd.title)</a>
+        </li>
+        #end
+       <!--  <li>
           <img alt="" src="images/school.jpg" width="100%" />
           <a href="#" class="">活动赛事</a>
         </li>
@@ -202,23 +223,21 @@
         <li>
           <img alt="" src="images/school.jpg" width="100%" />
           <a href="#" class="">活动赛事</a>
-        </li>
-        <li>
-          <img alt="" src="images/school.jpg" width="100%" />
-          <a href="#" class="">活动赛事</a>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
   <div class="news-moudle clearfix">
     <div class="news-info mr15" id="products">
-      <div class="title">协会见绍</div>
+      <div class="title">人才培养</div>
       <ul>
+       #for(rcpy:rencaipeiyangList)
         <li>
-            <a href="#">最新新闻最新新闻<img src="images/hot.gif" /></a>
-            <span>12-20</span>
+            <a href="#">#(rcpy.title)<img src="images/hot.gif" /></a>
+            <span>#(rcpy.createDatetime)</span>
         </li>
-        <li>
+        #end
+       <!--  <li>
             <a href="#">最新新闻最新新闻最新新闻<img src="images/hot.gif" /></a>
             <span>12-20</span>
         </li>
@@ -237,17 +256,19 @@
         <li>
             <a href="#">最新新闻最新新闻最新最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="news-info mr15" id="cals">
       <div class="title">行业文化</div>
       <ul>
+       #for(hywh:hangyewenhuaList)
         <li>
-            <a href="#">最新新闻最新新闻最新新闻最新新闻<img src="images/hot.gif" /></a>
-            <span>12-20</span>
+            <a href="#">#(hywh.title)<img src="images/hot.gif" /></a>
+            <span>#(hywh.createDatetime)</span>
         </li>
-        <li>
+        #end
+       <!--  <li>
             <a href="#">最新新闻最新新闻最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
         </li>
@@ -266,7 +287,7 @@
         <li>
             <a href="#">最新新闻最新新闻最新新闻最新新闻最新新闻最新新闻最新新闻</a>
             <span>12-20</span>
-        </li>
+        </li> -->
       </ul>
     </div>
     <div class="news-pic">
@@ -286,34 +307,13 @@
     <div class="title">比赛欣赏</div>
     <div class="box-list" id="Marquee_x">
       <ul class="img-lists clearfix">
+        #for(bsxs:bisaixinshangList)
         <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
+          <img alt="" src="#(bsxs.imageUrl)" width="100%" />
+          <a href="#" class="">#(bsxs.title)</a>
         </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
-        <li>
-          <img alt="" src="images/school03.jpg" width="100%" />
-          <a href="#" class="">比赛欣赏</a>
-        </li>
+        #end
+       
       </ul>
     </div>
   </div>

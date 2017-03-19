@@ -2,22 +2,32 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		#if(type==2)
-			<title>总教练管理</title>
-			<meta name="keywords" content="总教练管理" />
-			<meta name="description" content="总教练管理" />
+		#if(type==5)
+			<title>赛事活动管理</title>
+		    <meta name="keywords" content="赛事活动管理" />
+		    <meta name="description" content="赛事活动管理" />
+		#elseif(type==4)
+			<title>行业管理</title>
+			<meta name="keywords" content="行业管理" />
+			<meta name="description" content="行业管理" />
 		
+		#elseif(type==3)
+			<title>传统文化管理</title>
+			<meta name="keywords" content="传统文化管理" />
+			<meta name="description" content="传统文化管理" />
+		#elseif(type==2)
+			<title>人才培养管理</title>
+			<meta name="keywords" content="人才培养管理" />
+			<meta name="description" content="人才培养管理" />
 		#elseif(type==1)
-			<title>外聘老师管理</title>
-			<meta name="keywords" content="外聘老师管理" />
-			<meta name="description" content="外聘老师管理" />
-		
+			<title>比赛欣赏管理</title>
+			<meta name="keywords" content="比赛欣赏管理" />
+			<meta name="description" content="比赛欣赏管理" />
 		#elseif(type==0)
-			<title>学员管理</title>
-			<meta name="keywords" content="学员管理" />
-			<meta name="description" content="学员管理" />
+			<title>最新公告管理</title>
+			<meta name="keywords" content="最新公告管理" />
+			<meta name="description" content="最新公告管理" />
 		#end
-		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 		<!-- basic styles -->
@@ -87,13 +97,20 @@
 								<i class="icon-home home-icon"></i>
 								<a href="#">Home</a>
 							</li>
+
 							<li>
-								#if(type==2)
-									总教练管理
+								#if(type==5)
+									赛事活动管理
+								#elseif(type==4)
+									行业管理
+								#elseif(type==3)
+									传统文化管理
+								#elseif(type==2)
+									人才培养管理
 								#elseif(type==1)
-									外聘老师管理
+									比赛欣赏管理
 								#elseif(type==0)
-									学员管理
+									最新公告管理
 								#end
 							</li>
 						</ul><!-- .breadcrumb -->
@@ -103,6 +120,17 @@
 
 						<div class="row">
 							<div class="col-xs-12">
+								<!-- PAGE CONTENT BEGINS -->
+
+<!-- 								<div class="alert alert-info">
+									<i class="icon-hand-right"></i>
+
+									Please note that demo server is not configured to save the changes, therefore you may get an error message.
+									<button class="close" data-dismiss="alert">
+										<i class="icon-remove"></i>
+									</button>
+								</div> -->
+
 								<table id="grid-table"></table>
 
 								<div id="grid-pager"></div>
@@ -146,81 +174,59 @@
 		<script src="../assets/js/date-time/bootstrap-datepicker.min.js"></script>
 		<script src="../assets/js/jqGrid/jquery.jqGrid.min.js"></script>
 		<script src="../assets/js/jqGrid/i18n/grid.locale-en.js"></script>
-
+		<script src="../assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+		<script src="../assets/js/jquery.ui.touch-punch.min.js"></script>
+		<script src="../assets/js/markdown/markdown.min.js"></script>
+		<script src="../assets/js/markdown/bootstrap-markdown.min.js"></script>
+		<script src="../assets/js/jquery.hotkeys.min.js"></script>
+		<script src="../assets/js/bootstrap-wysiwyg.min.js"></script>
+		<script src="../assets/js/jquery.form.js"></script>
+		<script src="../assets/js/ajaxfileupload.js"></script>
+		<script src="../assets/js/bootbox.min.js"></script>
 		<!-- ace scripts -->
 
 		<script src="../assets/js/ace-elements.min.js"></script>
 		<script src="../assets/js/ace.min.js"></script>
 
 		<script type="text/javascript">
+		
+			var content='';
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
 				var pager_selector = "#grid-pager";
-				var userId ='';
-				 function getChiefCoachNames(){  
-				        var tmp="";  
-				        $.ajax({  
-					        type:"post",  
-					        async:false,  
-					        url:$path_base+"admin/user/listAll",  
-					        success:function(data){  
-					        if (data != null) {  
-					        	 var tmpObj=data;
-				                var length=tmpObj.length;  
-				                for(var i=0;i<length;i++){  
-				                	if(i==0)
-				                		userId =tmpObj[i].id;
-				                    if(i!=length-1){  
-				                    	tmp +=tmpObj[i].id+':'+tmpObj[i].userName+';';
-				                    }else{  
-				                    	tmp +=tmpObj[i].id+':'+tmpObj[i].userName;
-				                    }  
-				          
-				                 }     
-				             }  
-					        }  
-					        });  
-				         return tmp;  
-				        } 
+				function myelem (value, options) {
+					//<div class="wysiwyg-editor" id="editor"></div>
+				  var node = document.createElement("div");
+				  node.setAttribute("class","wysiwyg-editor");  
+			      //node.setAttribute("id","editor");  
+				  return node;
+				}
+				
+				function myvalue(elem, operation, value) {
+				    if(operation === 'get') {
+				       return $(elem).html();
+				    } else if(operation === 'set') {
+				    	content =value;
+				        $(elem).html(value);
+				    }
+				}
+				
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
-					url : $path_base+"admin/user/list?type=#(type)",
+					url : $path_base+"admin/article/list?type=#(type)",
 					datatype: "json",
 					height: 250,
-					colNames:[' ', '编号','用户名','手机号码','级段位', '身份证','微信', 'QQ','证书编号', '证书时间'
-						        #if(type==2)	
-						         , '发布人'
-						        #end
-					            #if(type!=2)
-									,'总教练'
-									,'培训地点'
-								#end
-								#if(type==0)
-									,'单位或学校'
-								#end
-					          ,'创建时间'],
+					colNames:[' ', '编号','文章标题','文章类型','显示','文章描述','图片', '发布人','发布时间'],
 					colModel:[
-						{name:'myac',index:'', width:20, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:30, sorttype:"int", editable: false,search:false},
-						{name:'userName',index:'userName',width:60, editable:true,search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
-						{name:'phone',index:'phone',width:60, editable:true,search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
-						{name:'danGrading',index:'danGrading',width:50,search:false,editable:true,formatter:danGradingFormatter,edittype:"select",editoptions:{value:"5:五级;4:四级;3:三级;2:二级;1:一级;11:一段;12:二段;13:三段;14:四段;15:五段;16:六段"}},
-						{name:'card',index:'card',width:60,search:false, editable:true},
-						{name:'wechat',index:'wechat', width:60,search:false,editable: true},
-						{name:'qq',index:'qq',width:60,search:false,editable: true},
-						{name:'certificateNumber',index:'certificateNumber', width:70,search:false, editable: true},
-						{name:'certificateDatetime',index:'certificateDatetime',search:false,formatter:'date',formatoptions: {newformat:'Y-m-d'},width:70, editable: true,editoptions:{readonly:true,required:true} }
-						#if(type==2)
-							,{name:'name',index:'name', width:50,search:false, editable: false}
-						#end
-						#if(type!=2)
-							,{name:'chiefCoachName',index:'chiefCoachName',search:true, width:70, editable: true,edittype:"select",editoptions:{value:getChiefCoachNames()}}
-							,{name:'trainingName',index:'trainingName',search:true, width:70, editable: true,edittype:"select",editoptions:{value:'"":""'}}
-						#end
-						#if(type==0)
-							,{name:'unit',index:'unit',search:false, width:70, editable: true,}
-						#end
-						,{name:'createDatetime',index:'createDatetime', width:70,search:false, editable: false}
+						{name:'myac',index:'', width:40, fixed:true, sortable:false, resize:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
+						{name:'title',index:'title',width:90, editable:true,editoptions:{size:"80",maxlength:"80"},editrules:{required:true}},
+						{name:'subType',index:'subType', width:60,editable: true,formatter:subTypeFmatter,edittype:"select",editoptions:{value:"0:普通;1:特殊;2:其他"}},
+						{name:'isShow',index:'isShow', width:60,editable: true,formatter:isShowFmatter,edittype:"select",editoptions:{value:"0:显示;1:不显示"}},
+						{name:'description',index:'description',hidden:true,editable: true,edittype:'custom',editoptions:{custom_element: myelem, custom_value:myvalue}},
+						{name:'imageUrl',index:'imageUrl', width:90,formatter:imageUrlFmatter, editable: true,edittype:'file'},
+						{name:'name',index:'name', width:90, editable: false},
+						{name:'createDatetime',index:'createDatetime', width:90, editable: false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -238,110 +244,117 @@
 							enableTooltips(table);
 						}, 0);
 					},
-					editurl: $path_base+"admin/user/save?type=#(type)",//nothing is saved
-					#if(type==2)
-						caption: "总教练列表",
+					editurl: $path_base+"admin/article/save?type=#(type)",//nothing is saved
+					#if(type==5)
+						caption: "赛事活动列表",
+					#elseif(type==4)
+						caption: "行业管理列表",
+					#elseif(type==3)
+						caption: "传统文化列表",
+					#elseif(type==2)
+						caption: "人才培养列表",
 					#elseif(type==1)
-						caption: "外聘教师列表",
+						caption: "比赛欣赏列表",
 					#elseif(type==0)
-						caption: "学员列表",
+						caption: "最新公告列表",
 					#end
+					
 					autowidth: true
-			
 				});
 				
-				function danGradingFormatter(cellvalue, options, rowObject){
-					if(cellvalue==5){
-						return "五级";
-					}else if(cellvalue==4){
-						return "四级";
-					}else if(cellvalue==3){
-						return "三级";
-					}else if(cellvalue==2){
-						return "二级";
+					
+				function subTypeFmatter(cellvalue, options, rowObject){
+					if(cellvalue==0){
+						return "普通";
 					}else if(cellvalue==1){
-						return "一级";
-					}else if(cellvalue==11){
-						return "一段";
-					}
-					else if(cellvalue==12){
-						return "二段";
-					}
-					else if(cellvalue==13){
-						return "三段";
-					}
-					else if(cellvalue==14){
-						return "四段";
-					}
-					else if(cellvalue==15){
-						return "五段";
-					}
-					else if(cellvalue==16){
-						return "六段";
+						return "特殊";
+					}else{
+						return "其他";
 					}
 				}
-			
+				function isShowFmatter(cellvalue, options, rowObject){
+					if(cellvalue==0){
+						return "显示";
+					}else if(cellvalue==1){
+						return "不显示";
+					}
+				}
+				function imageUrlFmatter(cellvalue, options, rowObject){
+					return '<img src="'+cellvalue+'"   style="width:50px;height:50px;" />';
+				}
+				
+				function showErrorAlert (reason, detail) {
+					var msg='';
+					if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+					else {
+						console.log("error uploading file", reason, detail);
+					}
+					$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+					 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+				}
+				
+				function descriptionFmatter(cellvalue, options, rowObject){
+					if(cellvalue.length<=20){
+						return cellvalue;
+					}
+					return cellvalue.substr(0,20)+"...";
+				}
+				
 				//navButtons
 				jQuery(grid_selector).jqGrid('navGrid',pager_selector,
 					{ 	//navbar options
 						edit: true,
 						editicon : 'icon-pencil blue',
-						#if(type==2)
-							add: true,
-							addicon : 'icon-plus-sign purple',
-						#else
-							add: false,
-						#end
+						add: true,
+						addicon : 'icon-plus-sign purple',
 						del: true,
 						delicon : 'icon-trash red',
-						search: true,
-						searchicon : 'icon-search orange',
+						search: false,
 						refresh: true,
 						refreshicon : 'icon-refresh green',
-						view: false
+						view: true,
+						viewicon : 'icon-zoom-in grey'
 					},
 					{
 						//edit record form
 						closeAfterEdit: true,
 						recreateForm: true,
+						width:850,
+						viewPagerButtons: false,
 						beforeShowForm : function(e) {
+							//alert("1--》"+e);
 							var form = $(e[0]);
 							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
 							editHtml(form);
 						},
-						onclickSubmit: function(params, posdata) {
-							#if(type==2)
-							var taIdsArr=$("#taIds").val();
-							var taIds='';
-							for(var i=0;i<taIdsArr.length;i++){
-								taIds =taIds+taIdsArr[i]+',';
-							}
-							posdata.taIds=taIds;
-							#end
-							console.log(posdata);
-                        }
+						  onclickSubmit: function(params, posdata) {
+							  console.log(params);
+							  console.log(posdata);
+							 var  imageUrl = $('#imageUrltmp').val();
+							  posdata.imageUrl=imageUrl;
+							  console.log(posdata);
+	                      } 
 					},
 					{
 						//new record form
 						closeAfterAdd: true,
 						recreateForm: true,
-						viewPagerButtons: false,
+						width:850,
+						//ajaxEditOptions:{contentType: "image/jpeg"},
+						//viewPagerButtons: false,
 						beforeShowForm : function(e) {
 							var form = $(e[0]);
+							//form.attr("enctype","multipart/form-data");
 							form.closest('.ui-jqdialog').find('.ui-jqdialog-titlebar').wrapInner('<div class="widget-header" />')
 							addHtml(form);
 						},
-						onclickSubmit: function(params, posdata) {
-							#if(type==2)
-								var taIdsArr=$("#taIds").val();
-								var taIds='';
-								for(var i=0;i<taIdsArr.length;i++){
-									taIds =taIds+taIdsArr[i]+',';
-								}
-								posdata.taIds=taIds;
-							#end
-							console.log(posdata);
-                        }
+						  onclickSubmit: function(params, posdata) {
+							  console.log(params);
+							  console.log(posdata);
+							 var  imageUrl = $('#imageUrltmp').val();
+							  posdata.imageUrl=imageUrl;
+							  console.log(posdata);
+	                      } 
 					},
 					{
 						//delete record form
@@ -358,7 +371,8 @@
 						onClick : function(e) {
 							alert("1");
 						}
-					},{
+					},
+					{
 						//search form
 						recreateForm: true,
 						afterShowSearch: function(e){
@@ -370,112 +384,116 @@
 							style_search_filters($(this));
 						}
 						,
-						 multipleSearch: true
+						multipleSearch: true,
 						/**
 						multipleGroup:true,
 						showQuery: true
 						*/
+					},
+					{
+						//view record form
+						recreateForm: true,
+						width:850,
+						beforeShowForm: function(e){
+							var form = $(e[0]);
+							form.find("#v_description").closest("tr").show();
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+						}
 					}
 				)
-				function style_search_filters(form) {
-					form.find('.delete-rule').val('X');
-					form.find('.add-rule').addClass('btn btn-xs btn-primary');
-					form.find('.add-group').addClass('btn btn-xs btn-success');
-					form.find('.delete-group').addClass('btn btn-xs btn-danger');
-				}
-				function style_search_form(form) {
-					var dialog = form.closest('.ui-jqdialog');
-					var buttons = dialog.find('.EditTable')
-					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'icon-retweet');
-					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'icon-comment-alt');
-					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'icon-search');
-				}
+				
+				function uploadFile(){
+					//var imageUrl='';
+				    $.ajaxFileUpload({  
+				        type: "POST",  
+				        url: "/go/admin/article/uplaodFile",  
+				       // data:{picParams:text},//要传到后台的参数，没有可以不写  
+				        secureuri : false,//是否启用安全提交，默认为false  
+				        fileElementId:'imageUrl',//文件选择框的id属性  
+				        dataType: 'json',//服务器返回的格式  
+				       // async : false,  
+				        success: function(data, status){ 
+				        	console.log(data);
+				            if(data.status=='success'){  
+				                $("#imageUrltmp").val(data.data);
+				                alert("图片上传成功!");
+				            }else{  
+				                alert("请重试!");
+				               
+				            }  
+				        }  
+				    });
+				 }
+				
 				function addHtml(form){
-					style_edit_form(form);
+					style_edit_form(form,0);
 				}
 				function editHtml(form){
-					style_edit_form(form);
+					style_edit_form(form,1);
+				}
+				function editor(){
+					$('#description').ace_wysiwyg({
+						toolbar:
+						[
+							'font',
+							null,
+							'fontSize',
+							null,
+							{name:'bold', className:'btn-info'},
+							{name:'italic', className:'btn-info'},
+							{name:'strikethrough', className:'btn-info'},
+							{name:'underline', className:'btn-info'},
+							null,
+							{name:'insertunorderedlist', className:'btn-success'},
+							{name:'insertorderedlist', className:'btn-success'},
+							{name:'outdent', className:'btn-purple'},
+							{name:'indent', className:'btn-purple'},
+							null,
+							{name:'justifyleft', className:'btn-primary'},
+							{name:'justifycenter', className:'btn-primary'},
+							{name:'justifyright', className:'btn-primary'},
+							{name:'justifyfull', className:'btn-inverse'},
+							null,
+							{name:'createLink', className:'btn-pink'},
+							{name:'unlink', className:'btn-pink'},
+							null,
+							{name:'insertImage', className:'btn-success'},
+							null,
+							'foreColor',
+							null,
+							{name:'undo', className:'btn-grey'},
+							{name:'redo', className:'btn-grey'}
+						],
+						'wysiwyg': {
+							fileUploadError: showErrorAlert
+						}
+					});
 				}
 				
-				function style_edit_form(form) {
-					#if(type==2)
-						var id=form.find("input[name=grid-table_id]").val();
-						var $trta =form.find("select[name=danGrading]").closest("tr");
-				 		var $clonedTrta = $trta.clone();
-				 		$clonedTrta.find(".CaptionTD").text("培训地点");
-						var selectStr ='<select class="form-control" role="select"  name="taIds" id="taIds"   multiple="multiple">';
-						$.ajax({
-						    url:$path_base+'admin/trainingAddress/listAll',
-						    type:'get', 
-						    async:true,    
-						    timeout:5000,
-						    dataType:'json',
-						    success:function(data,textStatus,jqXHR){
-						    	console.log(data);
-						    	for(var i=0;i<data.length;i++){
-						    		console.log(parseInt(id)===parseInt(data[i].userId));
-						    		if(parseInt(id)===parseInt(data[i].userId)){
-						    			selectStr =selectStr+'<option role="option"  selected = "selected" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
-						    		}else{
-						    			selectStr =selectStr+'<option role="option" value="'+data[i].id+'">'+data[i].trainingName+'</option>';
-						    		}
-						    	}
-						    	selectStr =selectStr+'</select>';
-						    	$clonedTrta.find(".DataTD").html(selectStr);
-								$trta.after($clonedTrta);
-						    },
-						    error:function(xhr,textStatus){
-						       alert("请重试！！！")
-						    }
-						});
-					#end
-					#if(type!=2)
-						form.find("select[name=chiefCoachName]").attr("name","chiefCoachId").attr("id","chiefCoachId");
-					    form.find("select[name=trainingName]").attr("name","trainingAddressId").attr("id","trainingAddressId");
-					    //alert();
-					    trainingAddressSelect($("select[name=chiefCoachId]").val())
-					    $("select[name=chiefCoachId]").on('change',function() {
-						    //alert("1");
-					    	 trainingAddressSelect($(this).val());
-					   });
-					 #end
-					form.find('input[name=certificateDatetime]').datepicker({format:'yyyy-mm-dd' , autoclose:true})
-					var $tr =form.find("input[name=userName]").closest("tr");
-			 		var $clonedTr = $tr.clone();
-			 		$clonedTr.find(".CaptionTD").text("密码");
-			 		$clonedTr.find(".DataTD").html('<input class="FormElement ui-widget-content ui-corner-all" role="textbox" name="password" id="password" type="password">');
-			 		$tr.after($clonedTr);
+				function style_edit_form(form,type) {
+					
+					editor();
+					if(type==1){
+						form.find("#description").html(content);
+					} 
+					form.find("#description").closest("tr").show();
+					form.find("#imageUrl").append('<input type="hidden" name="imageUrltmp" id="imageUrltmp">');
+					//form.find("#description").closest("tr").show();
 					//update buttons classes
 					var buttons = form.next().find('.EditButton .fm-button');
 					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon
 					buttons.eq(0).addClass('btn-primary').prepend('<i class="icon-ok"></i>');
 					buttons.eq(1).prepend('<i class="icon-remove"></i>')
-					//buttons = form.next().find('.navButton a');
+					buttons = form.next().find('.navButton a');
 					buttons.find('.ui-icon').remove();
-					//buttons.eq(0).append('<i class="icon-chevron-left"></i>');
-					//buttons.eq(1).append('<i class="icon-chevron-right"></i>');	
+					buttons.eq(0).append('<i class="icon-chevron-left"></i>');
+					buttons.eq(1).append('<i class="icon-chevron-right"></i>');		
 				}
 				
-				function trainingAddressSelect(userId){
-					 $("select[name=trainingAddressId]").empty();
-					     $.ajax({  
-				        type:"post",  
-				        async:false,  
-				        data:{"userId":userId},
-				        url:$path_base+"admin/trainingAddress/queryByUserId",  
-				        success:function(data){  
-				        if (data != null) {
-				        	 var tmpObj=data;
-			                var length=tmpObj.length;
-			                var tmp='';
-			                for(var i=0;i<length;i++){  
-			                	tmp +='<option value="'+tmpObj[i].id+'" role="option">'+tmpObj[i].trainingName+'</option>';
-			                 }     
-			                $("select[name=trainingAddressId]").html(tmp);
-			             }  
-				        }  
-				        });  
-				}
+				$(document).on('change',"#imageUrl",function(){
+					uploadFile();
+				});
+			
 				function style_delete_form(form) {
 					var buttons = form.next().find('.EditButton .fm-button');
 					buttons.addClass('btn btn-sm').find('[class*="-icon"]').remove();//ui-icon, s-icon

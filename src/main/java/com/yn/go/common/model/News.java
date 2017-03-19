@@ -1,5 +1,8 @@
 package com.yn.go.common.model;
 
+import java.util.List;
+import java.util.Map;
+
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
@@ -15,4 +18,8 @@ public class News extends BaseNews<News> {
 	public Page<Record> paginate(int pageNumber,int pageSize){
 		return Db.paginate(pageNumber, pageSize, "select a.*,a.create_datetime as createDatetime,c.name", "from t_news a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
 	}
+	
+	public List<Record> findList(int count){
+		return Db.find("select id,title,DATE_FORMAT(create_datetime,'%m-%d') as createDatetime from t_news order by create_datetime limit 0,?", count);
+	} 
 }
