@@ -10,11 +10,12 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+import com.yn.go.common.UrlConstants;
 import com.yn.go.common.model.Article;
 
 public class ArticleController extends Controller{
 
-	private static final String URL ="http://localhost:8080/go/";
+	
 	public void tolist(){
 		setAttr("active", "article");
 		int type = getParaToInt("type",5);
@@ -36,12 +37,12 @@ public class ArticleController extends Controller{
 		String result = "success";
 		String imageUrl=null;
 		try {
-			UploadFile imageUrlFile =getFile("imageUrl", "/image", 1024*1000, "utf-8");
+			UploadFile imageUrlFile =getFile("imageUrl", "/article/image", 1024*1000, "utf-8");
 		//	UploadFile imageUrlFile  = getFile("imageUrl", "/image");
 			String uploadPath = imageUrlFile.getUploadPath()+"/"+UUID.randomUUID().toString()+".jpg";
 			File dest =new File(uploadPath);
 			imageUrlFile.getFile().renameTo(dest);
-			imageUrl =URL+"upload/image/"+dest.getName();
+			imageUrl =UrlConstants.URL+"upload/article/image/"+dest.getName();
 			//imageUrlFile.getFile()
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,21 +1,48 @@
 package com.yn.go.front;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
+import com.yn.go.common.FrontInterceptor;
 import com.yn.go.common.SHA1Util;
+import com.yn.go.common.UrlConstants;
 import com.yn.go.common.model.TrainingAddress;
 import com.yn.go.common.model.User;
 
 public class UserController extends Controller{
 
+	@Clear(FrontInterceptor.class)
+	public void uplaodFile(){
+		String result = "success";
+		String imageUrl=null;
+		try {
+			UploadFile imageUrlFile =getFile("imageUrl", "/user/image", 1024*1000, "utf-8");
+		//	UploadFile imageUrlFile  = getFile("imageUrl", "/image");
+			String uploadPath = imageUrlFile.getUploadPath()+"/"+UUID.randomUUID().toString()+".jpg";
+			File dest =new File(uploadPath);
+			imageUrlFile.getFile().renameTo(dest);
+			imageUrl =UrlConstants.URL+"upload/user/image/"+dest.getName();
+			//imageUrlFile.getFile()
+		} catch (Exception e) {
+			e.printStackTrace();
+			result ="error";
+		}
+		Map<String,Object> resultMap =Maps.newHashMap();
+		resultMap.put("status", result);
+		resultMap.put("data", imageUrl);
+		renderJson(resultMap);
+	}
 	
 	public void tolist(){
 		int type = getParaToInt("type",2);
@@ -38,7 +65,6 @@ public class UserController extends Controller{
 		List<Record> list = Db.find("select id,user_name as userName from t_user where type=2");
 		renderJson(list);
 	}
-	
 	
 	
 	public void save(){

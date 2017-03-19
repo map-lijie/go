@@ -1,6 +1,5 @@
 package com.yn.go.front;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,42 +39,4 @@ public class TrainingAddressController extends Controller{
 		renderJson(resultMap);
 	}
 	
-	
-	
-	public void save(){
-		String oper = getPara("oper");
-		String result = "success";
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		Map<String,Object> user = (Map)getSessionAttr("user");
-		try {
-			TrainingAddress trainingAddress = getBean(TrainingAddress.class, "",true);
-			trainingAddress.setAdminId((Integer)user.get("id"));
-			if("edit".equals(oper)){
-				/*StringBuilder sb =new StringBuilder();
-				sb.append("update  t_training_address set training_name=?,admin_id=?,user_id=?,address=?,update_datetime=?");
-				List<Object> params =Lists.newArrayList();
-				params.add(trainingAddress.getTrainingName());
-				params.add(trainingAddress.getAdminId());
-				params.add(trainingAddress.getUserId());
-				params.add(trainingAddress.getAddress());
-				params.add(new Date());
-				sb.append(" where id=?");
-				params.add(trainingAddress.getId());
-				Db.update(sb.toString(), params.toArray());*/
-				trainingAddress.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
-			}else if("del".equals(oper)){
-				trainingAddress.deleteById(trainingAddress.getId());
-			}else{
-				trainingAddress.setCreateDatetime(new Date());
-				trainingAddress.setUpdateDatetime(new Date());
-				trainingAddress.save();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result ="error";
-		}
-		Map<String,Object> resultMap =Maps.newHashMap();
-		resultMap.put("status", result);
-		renderJson(resultMap);
-	}
 }

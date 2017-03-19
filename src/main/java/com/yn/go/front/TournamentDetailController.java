@@ -87,27 +87,6 @@ public class TournamentDetailController extends Controller{
 		renderJson(resultMap);
 	}
 	
-	public void save(){
-		String oper = getPara("oper");
-		String result = "success";
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		Map<String,Object> user = (Map)getSessionAttr("user");
-		try {
-			TournamentDetail tournamentDetail = getBean(TournamentDetail.class, "",true);
-			tournamentDetail.setAPayerId((Integer)user.get("id"));
-			if("edit".equals(oper)){
-				tournamentDetail.setUpdateDatetime(new Date()).removeNullValueAttrs().update();
-			}else if("del".equals(oper)){
-				tournamentDetail.deleteById(tournamentDetail.getId());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			result ="error";
-		}
-		Map<String,Object> resultMap =Maps.newHashMap();
-		resultMap.put("status", result);
-		renderJson(resultMap);
-	}
 	
 	
 }

@@ -1,7 +1,6 @@
 package com.yn.go.common.model;
 
 import java.util.List;
-import java.util.Map;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
