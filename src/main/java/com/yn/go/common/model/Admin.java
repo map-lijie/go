@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
 import com.yn.go.common.model.base.BaseAdmin;
 
 /**
@@ -24,8 +27,13 @@ public class Admin extends BaseAdmin<Admin> {
 		
 	}
 	
-	public Page<Admin> paginate(int pageNumber,int pageSize){
-		return paginate(pageNumber, pageSize, "select *", " from t_admin order by id asc");
+	public Page<Admin> paginate(int pageNumber,int pageSize,Integer adminType,Filters filters){
+		StringBuilder sql =new StringBuilder()
+		.append("from t_admin where type >= "+adminType )
+		.append(BuildSql.getInstance().build(filters, new BuildParams(true,"")));
+		return paginate(pageNumber, pageSize
+				, "select *"
+				, sql.toString());
 		
 	}
 	

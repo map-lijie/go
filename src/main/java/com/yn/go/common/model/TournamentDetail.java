@@ -1,8 +1,15 @@
 package com.yn.go.common.model;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
+import com.yn.go.common.TableFiledMapping;
 import com.yn.go.common.model.base.BaseTournamentDetail;
 
 /**
@@ -12,17 +19,29 @@ import com.yn.go.common.model.base.BaseTournamentDetail;
 public class TournamentDetail extends BaseTournamentDetail<TournamentDetail> {
 	public static final TournamentDetail dao = new TournamentDetail().dao();
 
-	public Page<Record> paginate(int pageNumber, int pageSize) {
+	public Page<Record> paginate(int pageNumber, int pageSize,Filters filters) {
 		String select = "SELECT"
-				+ "a.id,a.pay_type as payType,a.`status`,a.create_datetime as createDatetime,a.t_id as tId,a.payAccount as pay_account,b.user_name AS payerUserName,"
+				+ "a.id,a.order_id as orderId,a.pay_type as payType,a.`status`,a.create_datetime as createDatetime,a.t_id as tId,a.payAccount as pay_account,b.user_name AS payerUserName,"
 				+ "c.name,d.`name` as tournamentName,d.`status` as tournamentStatus,d.fee,"
-				+ "e.user_name AS userName ";
+				+ "g.user_name AS userName ,g.coach_user_name as coachUserName";
 		String sqlExceptSelect = " FROM t_tournament_detail a "
 				+ "LEFT JOIN t_user b ON (a.f_payer_id = b.id) "
 				+ "LEFT JOIN t_admin c ON (a.a_payer_id = c.id) "
 				+ "INNER JOIN t_tournament d ON(a.t_id=d.id) "
-				+ "INNER JOIN t_user e ON (a.user_id = e.id) ";
-		return Db.paginate(pageNumber, pageSize, select, sqlExceptSelect);
+				+ "INNER JOIN  (select e.id,e.user_name,f.user_name as coach_user_name from t_user e inner join t_user f on(e.chief_coach_id=f.id)) as g ON (a.user_id = g.id)";
+		       //from t_user a left join t_user b on(a.chief_coach_id=b.id) 
+		      //left join t_training_address c on(a.training_address_id=c.id) 
+		List<TableFiledMapping> tableFiledMappings =Lists.newArrayList();
+		tableFiledMappings.add(new TableFiledMapping("b", "payer_user_name","user_name")); 
+		tableFiledMappings.add(new TableFiledMapping("d", "tournament_name","name")); 
+		tableFiledMappings.add(new TableFiledMapping("d", "tournament_status","status")); 
+		tableFiledMappings.add(new TableFiledMapping("c", "name")); 
+		tableFiledMappings.add(new TableFiledMapping("g", "user_name")); 
+		tableFiledMappings.add(new TableFiledMapping("g", "coach_user_name")); 
+		StringBuilder sql =new StringBuilder()
+		.append(sqlExceptSelect)
+		.append( BuildSql.getInstance().build(filters, new BuildParams(tableFiledMappings)));
+		return Db.paginate(pageNumber, pageSize, select, sql.toString());
 	}
 	
 	public boolean update(Record record){

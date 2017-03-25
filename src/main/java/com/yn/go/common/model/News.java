@@ -5,6 +5,9 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
 import com.yn.go.common.model.base.BaseNews;
 
 /**
@@ -14,8 +17,11 @@ import com.yn.go.common.model.base.BaseNews;
 public class News extends BaseNews<News> {
 	public static final News dao = new News().dao();
 	
-	public Page<Record> paginate(int pageNumber,int pageSize){
-		return Db.paginate(pageNumber, pageSize, "select a.*,a.create_datetime as createDatetime,c.name", "from t_news a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+	public Page<Record> paginate(int pageNumber,int pageSize,Filters filters){
+		StringBuilder sql =new StringBuilder()
+		.append("from t_news a  left join t_admin c on(a.admin_id=c.id)")
+		.append(BuildSql.getInstance().build(filters, new BuildParams()));
+		return Db.paginate(pageNumber, pageSize, "select a.*,a.create_datetime as createDatetime,c.name",sql.toString());
 	}
 	
 	public List<Record> findList(int count){

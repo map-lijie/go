@@ -191,13 +191,13 @@
 					height: 250,
 					colNames:[' ', '编号','培训点','培训点地址','所属总教练', '总教练', '发布人'],
 					colModel:[
-						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'trainingName',index:'trainingName',width:90, editable:true},
-						{name:'address',index:'address', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
-						{name:'userId',index:'userId',hidden:true},
-						{name:'userName',index:'userName', width:70, editable: true,edittype:"select",editoptions:{value:gettypes()}},
-						{name:'name',index:'name', width:90, editable: false}
+						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false,search:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false,search:false},
+						{name:'trainingName',index:'trainingName',width:90, editable:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'address',index:'address', width:150,editable: true,editoptions:{size:"20",maxlength:"30"},stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'userId',index:'userId',hidden:true,search:false},
+						{name:'userName',index:'userName', width:70, editable: true,edittype:"select",editoptions:{value:gettypes()},stype:'text', searchoptions: {sopt:['eq']}},
+						{name:'name',index:'name', width:90, editable: false,search:false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -230,7 +230,8 @@
 						addicon : 'icon-plus-sign purple',
 						del: true,
 						delicon : 'icon-trash red',
-						search: false,
+						search: true,
+						searchicon : 'icon-search orange',
 						refresh: true,
 						refreshicon : 'icon-refresh green',
 						view: false
@@ -271,9 +272,42 @@
 						onClick : function(e) {
 							alert("1");
 						}
+					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
+						//search form
+						recreateForm: true,
+						afterShowSearch: function(e){
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+							style_search_form(form);
+						},
+						afterRedraw: function(){
+							style_search_filters($(this));
+						}
+						,
+						 multipleSearch: true
+						/**
+						multipleGroup:true,
+						showQuery: true
+						*/
 					}
 				)
-		
+				function style_search_filters(form) {
+					form.find('.delete-rule').val('X');
+					form.find('.add-rule').addClass('btn btn-xs btn-primary');
+					form.find('.add-group').addClass('btn btn-xs btn-success');
+					form.find('.delete-group').addClass('btn btn-xs btn-danger');
+				}
+				function style_search_form(form) {
+					var dialog = form.closest('.ui-jqdialog');
+					var buttons = dialog.find('.EditTable')
+					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'icon-retweet');
+					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'icon-comment-alt');
+					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'icon-search');
+				}
 				function addHtml(form){
 					style_edit_form(form);
 				}

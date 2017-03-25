@@ -28,7 +28,7 @@ public class LoginController extends Controller{
 					Map<String,Object> user =Maps.newHashMap();
 					user.put("name", name);
 					user.put("id", admin.getId());
-					user.put("type", admin.getType());
+					user.put("adminType", admin.getType());
 					user.put("token", UUID.randomUUID().toString());
 					user.put("createDatetime", System.currentTimeMillis());
 					setSessionAttr("user",user);

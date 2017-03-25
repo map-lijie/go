@@ -1,8 +1,15 @@
 package com.yn.go.common.model;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
+import com.yn.go.common.TableFiledMapping;
 import com.yn.go.common.model.base.BaseUser;
 
 /**
@@ -12,14 +19,46 @@ import com.yn.go.common.model.base.BaseUser;
 public class User extends BaseUser<User> {
 	public static final User dao = new User().dao();
 	//,b.training_name as trainingName,b.id as trainingId left join t_training_address b on(a.id=b.user_id)
-	public Page<Record> paginate(int pageNumber,int pageSize,int type){
-		if(type==2)
-			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,c.name", "from t_user a  left join t_admin c on(a.admin_id=c.id) where a.type=2 order by a.id asc");
-		else if(type==1)
-			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,a.chief_coach_id as chiefCoachId,a.training_address_id as trainingAddressId,b.user_name as chiefCoachName,c.training_name as trainingName", "from t_user a left join t_user b on(a.chief_coach_id=b.id) left join t_training_address c on(a.training_address_id=c.id) where a.type=1 order by a.id asc");
-		else if(type==0)
-			return Db.paginate(pageNumber, pageSize, "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.unit,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,a.chief_coach_id as chiefCoachId,a.training_address_id as trainingAddressId,b.user_name as chiefCoachName,c.training_name as trainingName", "from t_user a left join t_user b on(a.chief_coach_id=b.id) left join t_training_address c on(a.training_address_id=c.id) where a.type=0 order by a.id asc");
+	public Page<Record> paginate(int pageNumber,int pageSize,int type,Filters filters){
+		
+		StringBuilder sql =new StringBuilder();
+		if(type==2) {
+			sql.append("from t_user a  left join t_admin c on(a.admin_id=c.id) ")
+			.append(" where a.type=2 ")
+			.append(BuildSql.getInstance().build(filters, new BuildParams(true)));
+			//.append(" order by a.id asc");
+			return Db.paginate(pageNumber, pageSize
+					   , "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,c.name"
+					   , sql.toString());
+		}else if(type==1) {
+			sql.append("from t_user a left join t_user b on(a.chief_coach_id=b.id) left join t_training_address c on(a.training_address_id=c.id)")
+			.append(" where a.type=1 ")
+			.append(buildSql(filters));
+			//.append(" order by a.id asc");
+			return Db.paginate(pageNumber, pageSize
+					   , "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,a.chief_coach_id as chiefCoachId,a.training_address_id as trainingAddressId,b.user_name as chiefCoachName,c.training_name as trainingName"
+					   , sql.toString());
+		}else if(type==0) {
+			sql.append("from t_user a left join t_user b on(a.chief_coach_id=b.id) left join t_training_address c on(a.training_address_id=c.id) ")
+			.append(" where a.type=0 ")
+			.append(buildSql(filters));
+			return Db.paginate(pageNumber, pageSize
+					   , "select a.id,a.user_name as userName,a.phone,a.dan_grading as danGrading,a.card,a.wechat,a.qq,a.certificate_number as certificateNumber,a.unit,a.certificate_datetime as certificateDatetime,a.create_datetime as createDatetime,a.chief_coach_id as chiefCoachId,a.training_address_id as trainingAddressId,b.user_name as chiefCoachName,c.training_name as trainingName"
+					   , sql.toString());
+		}
 		return null;
+	}
+
+	/**
+	 * 组装sql
+	 * @param filters
+	 * @return
+	 */
+	private String buildSql(Filters filters) {
+		List<TableFiledMapping> tableFiledMappings =Lists.newArrayList();
+		tableFiledMappings.add(new TableFiledMapping("b", "chief_coach_name", "user_name"));
+		tableFiledMappings.add(new TableFiledMapping("c", "training_name"));
+		return BuildSql.getInstance().build(filters, new BuildParams(true,tableFiledMappings));
 	}
 	
     public User checkUserAndPassword(String name,String password){

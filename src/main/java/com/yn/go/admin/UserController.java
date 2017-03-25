@@ -4,18 +4,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.Filters;
 import com.yn.go.common.SHA1Util;
 import com.yn.go.common.model.TrainingAddress;
 import com.yn.go.common.model.User;
 
 public class UserController extends Controller{
 
+	private final static  Logger LOGGER =Logger.getLogger(UserController.class);
 	
 	public void tolist(){
 		int type = getParaToInt("type",2);
@@ -25,7 +30,10 @@ public class UserController extends Controller{
 	}
 	
 	public void list(){
-		Page<Record> paginate = User.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",2));
+		Filters filters = JSON.parseObject(getPara("filters"), Filters.class);
+		if(LOGGER.isInfoEnabled())
+			LOGGER.info("Filters==="+filters);
+		Page<Record> paginate = User.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",2),filters);
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());
@@ -35,7 +43,8 @@ public class UserController extends Controller{
 	}
 	
 	public void listAll(){
-		List<Record> list = Db.find("select id,user_name as userName from t_user where type=2");
+		Integer type = getParaToInt("type",2);
+		List<Record> list = Db.find("select id,user_name as userName from t_user where type=?",type);
 		renderJson(list);
 	}
 	

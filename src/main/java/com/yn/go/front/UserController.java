@@ -50,13 +50,13 @@ public class UserController extends Controller{
 	}
 	
 	public void list(){
-		Page<Record> paginate = User.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",2));
+		/*Page<Record> paginate = User.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",2));
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());
 		resultMap.put("records", paginate.getTotalRow());
 		resultMap.put("rows", paginate.getList());
-		renderJson(resultMap);
+		renderJson(resultMap);*/
 	}
 	
 	public void listAll(){

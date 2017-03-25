@@ -5,6 +5,9 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
 import com.yn.go.common.model.base.BaseArticle;
 
 /**
@@ -13,8 +16,14 @@ import com.yn.go.common.model.base.BaseArticle;
 @SuppressWarnings("serial")
 public class Article extends BaseArticle<Article> {
 	public static final Article dao = new Article().dao();
-	public Page<Record> paginate(int pageNumber,int pageSize,int type){
-		return Db.paginate(pageNumber, pageSize, "select a.id,a.title,a.description,a.type,a.sub_type as subType,a.image_url as imageUrl,a.is_show as isShow,a.create_datetime as createDatetime,c.name", "from t_article a  left join t_admin c on(a.admin_id=c.id) where a.type=? order by a.create_datetime desc",type);
+	public Page<Record> paginate(int pageNumber,int pageSize,int type,Filters filters){
+		StringBuilder sql =new StringBuilder()
+		.append("from t_article a  left join t_admin c on(a.admin_id=c.id) where a.type=? ")
+		.append(BuildSql.getInstance().build(filters, new BuildParams(true)));
+		return Db.paginate(pageNumber, pageSize
+				, "select a.id,a.title,a.description,a.type,a.sub_type as subType,a.image_url as imageUrl,a.is_show as isShow,a.create_datetime as createDatetime,c.name"
+				, sql.toString()
+				,type);
 	}
 	
 	public List<Record> findList(int type,int count){

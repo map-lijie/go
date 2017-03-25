@@ -218,15 +218,21 @@
 					height: 250,
 					colNames:[' ', '编号','文章标题','文章类型','显示','文章描述','图片', '发布人','发布时间'],
 					colModel:[
-						{name:'myac',index:'', width:40, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'title',index:'title',width:90, editable:true,editoptions:{size:"80",maxlength:"80"},editrules:{required:true}},
-						{name:'subType',index:'subType', width:60,editable: true,formatter:subTypeFmatter,edittype:"select",editoptions:{value:"0:普通;1:特殊;2:其他"}},
-						{name:'isShow',index:'isShow', width:60,editable: true,formatter:isShowFmatter,edittype:"select",editoptions:{value:"0:显示;1:不显示"}},
-						{name:'description',index:'description',hidden:true,editable: true,edittype:'custom',editoptions:{custom_element: myelem, custom_value:myvalue}},
-						{name:'imageUrl',index:'imageUrl', width:90,formatter:imageUrlFmatter, editable: true,edittype:'file'},
-						{name:'name',index:'name', width:90, editable: false},
-						{name:'createDatetime',index:'createDatetime', width:90, editable: false}
+						{name:'myac',index:'', width:40, fixed:true, sortable:false, resize:false,search:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false,search:false},
+						{name:'title',index:'title',width:90, editable:true,editoptions:{size:"80",maxlength:"80"},editrules:{required:true},stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'subType',index:'subType', width:60,editable: true,formatter:subTypeFmatter,edittype:"select",editoptions:{value:"0:普通;1:特殊;2:其他"},stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="0">普通</option><option value="1">特殊</option><option value="2">其他</option>';
+							$(elem).append(str);
+						}}},
+						{name:'isShow',index:'isShow', width:60,editable: true,formatter:isShowFmatter,edittype:"select",editoptions:{value:"0:显示;1:不显示"},stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="0">显示</option><option value="1">不显示</option>';
+							$(elem).append(str);
+						}}},
+						{name:'description',index:'description',hidden:true,editable: true,edittype:'custom',editoptions:{custom_element: myelem, custom_value:myvalue},search:false},
+						{name:'imageUrl',index:'imageUrl', width:90,formatter:imageUrlFmatter, editable: true,edittype:'file',search:false},
+						{name:'name',index:'name', width:90, editable: false,search:false},
+						{name:'createDatetime',index:'createDatetime', width:90, editable: false,search:false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -309,7 +315,8 @@
 						addicon : 'icon-plus-sign purple',
 						del: true,
 						delicon : 'icon-trash red',
-						search: false,
+						search: true,
+						searchicon : 'icon-search orange',
 						refresh: true,
 						refreshicon : 'icon-refresh green',
 						view: true,
@@ -371,8 +378,11 @@
 						onClick : function(e) {
 							alert("1");
 						}
-					},
-					{
+					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
 						//search form
 						recreateForm: true,
 						afterShowSearch: function(e){
@@ -384,7 +394,7 @@
 							style_search_filters($(this));
 						}
 						,
-						multipleSearch: true,
+						 multipleSearch: true
 						/**
 						multipleGroup:true,
 						showQuery: true
@@ -401,6 +411,20 @@
 						}
 					}
 				)
+				
+				function style_search_filters(form) {
+					form.find('.delete-rule').val('X');
+					form.find('.add-rule').addClass('btn btn-xs btn-primary');
+					form.find('.add-group').addClass('btn btn-xs btn-success');
+					form.find('.delete-group').addClass('btn btn-xs btn-danger');
+				}
+				function style_search_form(form) {
+					var dialog = form.closest('.ui-jqdialog');
+					var buttons = dialog.find('.EditTable')
+					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'icon-retweet');
+					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'icon-comment-alt');
+					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'icon-search');
+				}
 				
 				function uploadFile(){
 					//var imageUrl='';

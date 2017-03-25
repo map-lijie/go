@@ -5,16 +5,20 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
+
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
+import com.yn.go.common.Filters;
 import com.yn.go.common.UrlConstants;
 import com.yn.go.common.model.Article;
 
 public class ArticleController extends Controller{
-
+	private final static  Logger LOGGER =Logger.getLogger(ArticleController.class);
 	
 	public void tolist(){
 		setAttr("active", "article");
@@ -24,7 +28,10 @@ public class ArticleController extends Controller{
 	}
 	
 	public void list(){
-		Page<Record> paginate = Article.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",5));
+		Filters filters = JSON.parseObject(getPara("filters"), Filters.class);
+		if(LOGGER.isInfoEnabled())
+			LOGGER.info("Filters==="+filters);
+		Page<Record> paginate = Article.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),getParaToInt("type",5),filters);
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());

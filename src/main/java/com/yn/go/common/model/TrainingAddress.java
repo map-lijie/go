@@ -1,8 +1,15 @@
 package com.yn.go.common.model;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
+import com.yn.go.common.TableFiledMapping;
 import com.yn.go.common.model.base.BaseTrainingAddress;
 
 /**
@@ -12,7 +19,14 @@ import com.yn.go.common.model.base.BaseTrainingAddress;
 public class TrainingAddress extends BaseTrainingAddress<TrainingAddress> {
 	public static final TrainingAddress dao = new TrainingAddress().dao();
 	
-	public Page<Record> paginate(int pageNumber,int pageSize){
-		return Db.paginate(pageNumber, pageSize, "select a.id,a.address,a.user_id as userId,a.training_name as trainingName,b.user_name as userName,c.name", "from t_training_address a left join t_user b on(a.user_id =b.id) left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+	public Page<Record> paginate(int pageNumber,int pageSize,Filters filters){
+		List<TableFiledMapping> tableFiledMappings =Lists.newArrayList();
+		tableFiledMappings.add(new TableFiledMapping("b", "user_name"));
+		StringBuilder sql =new StringBuilder()
+		.append("from t_training_address a left join t_user b on(a.user_id =b.id) left join t_admin c on(a.admin_id=c.id)")
+		.append( BuildSql.getInstance().build(filters, new BuildParams(tableFiledMappings)));
+		return Db.paginate(pageNumber, pageSize
+				, "select a.id,a.address,a.user_id as userId,a.training_name as trainingName,b.user_name as userName,c.name"
+				, sql.toString());
 	}
 }

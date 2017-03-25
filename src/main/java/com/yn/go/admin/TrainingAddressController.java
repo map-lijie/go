@@ -4,15 +4,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.Filters;
 import com.yn.go.common.model.TrainingAddress;
 
 public class TrainingAddressController extends Controller{
-
+	private final static  Logger LOGGER =Logger.getLogger(TrainingAddressController.class);
 	public void tolist(){
 		setAttr("active", "trainingAddress");
 		render("trainingAddress.html");
@@ -31,7 +35,10 @@ public class TrainingAddressController extends Controller{
 	
 	
 	public void list(){
-		Page<Record> paginate = TrainingAddress.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10));
+		Filters filters = JSON.parseObject(getPara("filters"), Filters.class);
+		if(LOGGER.isInfoEnabled())
+			LOGGER.info("Filters==="+filters);
+		Page<Record> paginate = TrainingAddress.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),filters);
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());

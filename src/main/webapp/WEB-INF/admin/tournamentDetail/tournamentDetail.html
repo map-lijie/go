@@ -169,21 +169,32 @@
 					url : $path_base+"admin/tournamentDetail/list",
 					datatype: "json",
 					height: 250,
-					colNames:[' ', '编号','学员','赛事','费用(单位:分)', '赛事状态','支付人', '操作人','支付账号','支付类型','状态','报名时间','操作'],
+					colNames:[' ', '编号','流水号','学员','总教练','赛事','费用(单位:分)', '赛事状态','支付人', '操作人','支付账号','支付类型','状态','报名时间','操作'],
 					colModel:[
-						{name:'myac',index:'', width:30, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'userName',index:'userName',width:90},
-						{name:'tournamentName',index:'tournamentName', width:90},
-						{name:'fee',index:'fee', width:90, formatter:statusFormatter},
-						{name:'tournamentStatus',index:'tournamentStatus', width:90, formatter:tournamentStatusFormatter},
-						{name:'payerUserName',index:'payerUserName',width:90},
-						{name:'name',index:'name', width:90},
-						{name:'payAccount',index:'payAccount',width:90},
-						{name:'payType',index:'payType',width:60,formatter:payTypeFormatter},
-						{name:'status',index:'status', width:70,formatter:statusFormatter},
-						{name:'createDatetime',index:'createDatetime', width:90},
-						{name:'Modify',index:'Modify', width:90,align:'center',sortable:false}
+						{name:'myac',index:'', width:30, fixed:true, sortable:false, resize:false,search:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false,search:false},
+						{name:'orderId',index:'orderId', width:60, sorttype:"int", editable: false,stype:'text', searchoptions: {sopt:['eq']}},
+						{name:'userName',index:'userName',width:90,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'coachUserName',index:'coachUserName',width:90,stype:'text', searchoptions: {sopt:['eq']}},
+						{name:'tournamentName',index:'tournamentName', width:90,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'fee',index:'fee', width:90, formatter:statusFormatter,search:false},
+						{name:'tournamentStatus',index:'tournamentStatus', width:90, formatter:tournamentStatusFormatter,stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="0">报名中</option><option value="1">已关闭</option>';
+							$(elem).append(str);
+						}}},
+						{name:'payerUserName',index:'payerUserName',width:90,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'name',index:'name', width:90,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'payAccount',index:'payAccount',width:90,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'payType',index:'payType',width:60,formatter:payTypeFormatter,stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="0">支付宝</option><option value="1">微信</option><option value="2">现金</option>';
+							$(elem).append(str);
+						}}},
+						{name:'status',index:'status', width:70,formatter:statusFormatter,stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="10">已报名</option><option value="11">已缴费</option>';
+							$(elem).append(str);
+						}}},
+						{name:'createDatetime',index:'createDatetime', width:90,search:false},
+						{name:'Modify',index:'Modify', width:90,align:'center',sortable:false,search:false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -300,8 +311,11 @@
 						onClick : function(e) {
 							alert("1");
 						}
-					},
-					{
+					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
 						//search form
 						recreateForm: true,
 						afterShowSearch: function(e){

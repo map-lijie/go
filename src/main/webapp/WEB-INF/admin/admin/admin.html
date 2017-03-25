@@ -187,12 +187,12 @@
 					height: 250,
 					colNames:[' ', '编号','用户名','手机号', '地址', '管理员类型'],
 					colModel:[
-						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'name',index:'name',width:90, editable:true},
-						{name:'phone',index:'phone', width:150,editable: true,editoptions:{size:"20",maxlength:"30"}},
-						{name:'address',index:'address', width:70, editable: true},
-						{name:'type',index:'type', width:90, editable: true,formatter:adminFmatter,edittype:"select",editoptions:{value:"1:一级管理员;2:二级管理员"}}
+						{name:'myac',index:'', width:80, fixed:true, sortable:false, resize:false,search:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false,search:false},
+						{name:'name',index:'name',width:90, editable:true,search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'phone',index:'phone', width:150,editable: true,editoptions:{size:"20",maxlength:"30"},search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'address',index:'address', width:70, editable: true,search:true,stype:'text', searchoptions: {sopt:['cn']}},
+						{name:'type',index:'type', width:90, editable: true,formatter:adminFmatter,edittype:"select",editoptions:{value:"1:一级管理员;2:二级管理员"},search:false}
 					], 
 			
 					viewrecords : true,
@@ -240,7 +240,8 @@
 						addicon : 'icon-plus-sign purple',
 						del: true,
 						delicon : 'icon-trash red',
-						search: false,
+						search: true,
+						searchicon : 'icon-search orange',
 						refresh: true,
 						refreshicon : 'icon-refresh green',
 						view: false
@@ -287,8 +288,43 @@
 						onClick : function(e) {
 							alert("1");
 						}
+					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
+						//search form
+						recreateForm: true,
+						afterShowSearch: function(e){
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+							style_search_form(form);
+						},
+						afterRedraw: function(){
+							style_search_filters($(this));
+						}
+						,
+						 multipleSearch: true
+						/**
+						multipleGroup:true,
+						showQuery: true
+						*/
 					}
 				)
+				
+				function style_search_filters(form) {
+					form.find('.delete-rule').val('X');
+					form.find('.add-rule').addClass('btn btn-xs btn-primary');
+					form.find('.add-group').addClass('btn btn-xs btn-success');
+					form.find('.delete-group').addClass('btn btn-xs btn-danger');
+				}
+				function style_search_form(form) {
+					var dialog = form.closest('.ui-jqdialog');
+					var buttons = dialog.find('.EditTable')
+					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'icon-retweet');
+					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'icon-comment-alt');
+					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'icon-search');
+				}
 		
 				function addHtml(form){
 					style_edit_form(form);

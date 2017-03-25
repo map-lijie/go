@@ -200,7 +200,7 @@
 								#end
 					          ,'创建时间'],
 					colModel:[
-						{name:'myac',index:'', width:20, fixed:true, sortable:false, resize:false},
+						{name:'myac',index:'', width:20, fixed:true, sortable:false,search:false, resize:false},
 						{name:'id',index:'id', width:30, sorttype:"int", editable: false,search:false},
 						{name:'userName',index:'userName',width:60, editable:true,search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
 						{name:'phone',index:'phone',width:60, editable:true,search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
@@ -214,8 +214,18 @@
 							,{name:'name',index:'name', width:50,search:false, editable: false}
 						#end
 						#if(type!=2)
-							,{name:'chiefCoachName',index:'chiefCoachName',search:true, width:70, editable: true,edittype:"select",editoptions:{value:getChiefCoachNames()}}
-							,{name:'trainingName',index:'trainingName',search:true, width:70, editable: true,edittype:"select",editoptions:{value:'"":""'}}
+							,{name:'chiefCoachName',index:'chiefCoachName',search:true,width:70, editable: true,edittype:"select",editoptions:{value:getChiefCoachNames()},stype:'text',
+							searchoptions:{
+								sopt:['eq']
+							    //,ajaxSelectOptions: {type: "GET"} 
+								//,dataUrl:$path_base+'admin/user/listAll'
+							}}
+							,{name:'trainingName',index:'trainingName',search:true,width:70, editable: true,edittype:"select",editoptions:{value:'"":""'},stype:'text',
+								searchoptions:{
+									sopt:['eq','cn']
+								    //,ajaxSelectOptions: {type: "GET"} 
+									//,dataUrl:$path_base+'admin/user/listAll'
+								}}
 						#end
 						#if(type==0)
 							,{name:'unit',index:'unit',search:false, width:70, editable: true,}
@@ -359,6 +369,10 @@
 							alert("1");
 						}
 					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
 						//search form
 						recreateForm: true,
 						afterShowSearch: function(e){

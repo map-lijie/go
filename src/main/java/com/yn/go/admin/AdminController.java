@@ -3,14 +3,18 @@ package com.yn.go.admin;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Page;
+import com.yn.go.common.Filters;
 import com.yn.go.common.SHA1Util;
 import com.yn.go.common.model.Admin;
 
 public class AdminController extends Controller{
-
+	private final static  Logger LOGGER =Logger.getLogger(AdminController.class);
 	
 	public void tolist(){
 		setAttr("active", "admin");
@@ -18,7 +22,12 @@ public class AdminController extends Controller{
 	}
 	
 	public void list(){
-		Page<Admin> paginate = Admin.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10));
+		Filters filters = JSON.parseObject(getPara("filters"), Filters.class);
+		if(LOGGER.isInfoEnabled())
+			LOGGER.info("Filters==="+filters);
+		Map user = getSessionAttr("user");
+		Integer adminType = Integer.valueOf(user.get("adminType")+"");
+		Page<Admin> paginate = Admin.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10),adminType,filters);
 		Map<String,Object> resultMap =Maps.newHashMap();
 		resultMap.put("total", paginate.getTotalPage());
 		resultMap.put("page", paginate.getPageNumber());

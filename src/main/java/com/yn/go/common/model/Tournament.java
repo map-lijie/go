@@ -3,6 +3,9 @@ package com.yn.go.common.model;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+import com.yn.go.common.BuildParams;
+import com.yn.go.common.BuildSql;
+import com.yn.go.common.Filters;
 import com.yn.go.common.model.base.BaseTournament;
 
 /**
@@ -12,7 +15,12 @@ import com.yn.go.common.model.base.BaseTournament;
 public class Tournament extends BaseTournament<Tournament> {
 	public static final Tournament dao = new Tournament().dao();
 	
-	public Page<Record> paginate(int pageNumber,int pageSize){
-		return Db.paginate(pageNumber, pageSize, "select a.id,a.name,a.description,a.dan_grading as danGrading,a.fee,a.status,c.name", "from t_tournament a  left join t_admin c on(a.admin_id=c.id) order by a.id asc");
+	public Page<Record> paginate(int pageNumber,int pageSize,Filters filters){
+		StringBuilder sql =new StringBuilder()
+		.append("from t_tournament a  left join t_admin c on(a.admin_id=c.id)")
+		.append(BuildSql.getInstance().build(filters, new BuildParams()));
+		return Db.paginate(pageNumber, pageSize
+				, "select a.id,a.name,a.description,a.dan_grading as danGrading,a.fee,a.status,c.name as adminName"
+				, sql.toString());
 	}
 }

@@ -187,8 +187,6 @@
 			jQuery(function($) {
 				var grid_selector = "#grid-table";
 				var pager_selector = "#grid-pager";
-			
-				
 				
 				jQuery(grid_selector).jqGrid({
 					//direction: "rtl",
@@ -197,15 +195,27 @@
 					height: 250,
 					colNames:[' ', '编号','赛事名称','描述','段级位', '费用(单位:分)','状态', '发布人','操作'],
 					colModel:[
-						{name:'myac',index:'', width:50, fixed:true, sortable:false, resize:false},
-						{name:'id',index:'id', width:60, sorttype:"int", editable: false},
-						{name:'name',index:'name',width:90, editable:true,editoptions: {maxlength: 30},editrules:{required:true}},
-						{name:'description',index:'description', width:150,editable: true,edittype:"textarea",editoptions: {rows:"2",cols:"10"}},
-						{name:'danGrading',index:'danGrading',editable:true,formatter:danGradingFormatter,edittype:"select",editoptions:{value:"5:五级;4:四级;3:三级;2:二级;1:一级;11:一段;12:二段;13:三段;14:四段;15:五段;16:六段"}},
-						{name:'fee',index:'fee', width:70, editable: true,formatter:'integer',editrules:{required:true,number:true}},
-						{name:'status',index:'status', width:90, editable: true,formatter:statusFormatter,edittype:"select",editoptions:{value:"0:报名中;1:已关闭"}},
-						{name:'name',index:'name', width:90, editable: false},
-						{name:'Modify',index:'Modify', width:90,align:'center',sortable:false}
+						{name:'myac',index:'', width:50, fixed:true, search:false,sortable:false, resize:false},
+						{name:'id',index:'id', width:60, sorttype:"int", editable: false, search:false},
+						{name:'name',index:'name',width:90, editable:true,editoptions: {maxlength: 30},editrules:{required:true},search:true,stype:'text', searchoptions: {sopt:['eq','cn']}},
+						{name:'description',index:'description', width:150,editable: true,edittype:"textarea",editoptions: {rows:"2",cols:"10"}, search:false},
+						{name:'danGrading',index:'danGrading',editable:true,formatter:danGradingFormatter,edittype:"select",editoptions:{value:"5:五级;4:四级;3:三级;2:二级;1:一级;11:一段;12:二段;13:三段;14:四段;15:五段;16:六段"},stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="5">五级</option><option value="4">四级</option>'+
+							'<option value="3">三级</option><option value="2">二级</option>'+
+							'<option value="1">一级</option><option value="11">一段</option>'+
+							'<option value="12">二段</option><option value="13">三段</option>'+
+							'<option value="14">四段</option><option value="15">五段</option>'+
+							'<option value="16">六段</option>';
+							$(elem).append(str);
+						}}},
+						{name:'fee',index:'fee', width:70, editable: true,formatter:'integer',editrules:{required:true,number:true}, search:false},
+						{name:'status',index:'status', width:90, editable: true,formatter:statusFormatter,edittype:"select",editoptions:{value:"0:报名中;1:已关闭"},stype:'select', searchoptions: {sopt:['eq'],dataInit:function(elem){
+							var str='<option value="0">报名中</option><option value="1">已关闭</option>';
+							$(elem).append(str);
+							//$(elem).addClass("style","width: 98%;");
+						}}},
+						{name:'adminName',index:'adminName', width:90, editable: false, search:false},
+						{name:'Modify',index:'Modify', width:90,align:'center',sortable:false, search:false}
 					], 
 					viewrecords : true,
 					rowNum:10,
@@ -293,7 +303,8 @@
 						addicon : 'icon-plus-sign purple',
 						del: true,
 						delicon : 'icon-trash red',
-						search: false,
+						search: true,
+						searchicon : 'icon-search orange',
 						refresh: true,
 						refreshicon : 'icon-refresh green',
 						view: false
@@ -334,8 +345,43 @@
 						onClick : function(e) {
 							alert("1");
 						}
+					},{
+						Find: "搜索", 
+					    Reset: "重置", 
+						//odata : ['equal', 'contains'],  
+						groupOps: [ { op: "AND", text: "AND" }, { op: "OR", text: "OR" } ], 
+						//search form
+						recreateForm: true,
+						afterShowSearch: function(e){
+							var form = $(e[0]);
+							form.closest('.ui-jqdialog').find('.ui-jqdialog-title').wrap('<div class="widget-header" />')
+							style_search_form(form);
+						},
+						afterRedraw: function(){
+							style_search_filters($(this));
+						}
+						,
+						 multipleSearch: true
+						/**
+						multipleGroup:true,
+						showQuery: true
+						*/
 					}
 				)
+				
+				function style_search_filters(form) {
+					form.find('.delete-rule').val('X');
+					form.find('.add-rule').addClass('btn btn-xs btn-primary');
+					form.find('.add-group').addClass('btn btn-xs btn-success');
+					form.find('.delete-group').addClass('btn btn-xs btn-danger');
+				}
+				function style_search_form(form) {
+					var dialog = form.closest('.ui-jqdialog');
+					var buttons = dialog.find('.EditTable')
+					buttons.find('.EditButton a[id*="_reset"]').addClass('btn btn-sm btn-info').find('.ui-icon').attr('class', 'icon-retweet');
+					buttons.find('.EditButton a[id*="_query"]').addClass('btn btn-sm btn-inverse').find('.ui-icon').attr('class', 'icon-comment-alt');
+					buttons.find('.EditButton a[id*="_search"]').addClass('btn btn-sm btn-purple').find('.ui-icon').attr('class', 'icon-search');
+				}
 		
 				function addHtml(form){
 					style_edit_form(form);
