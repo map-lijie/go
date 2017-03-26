@@ -77,15 +77,6 @@ public class TournamentDetailController extends Controller{
 		render("tournamentDetail.html");
 	}
 	
-	public void list(){
-		Page<Record> paginate = TournamentDetail.dao.paginate(getParaToInt("page", 1), getParaToInt("rows", 10));
-		Map<String,Object> resultMap =Maps.newHashMap();
-		resultMap.put("total", paginate.getTotalPage());
-		resultMap.put("page", paginate.getPageNumber());
-		resultMap.put("records", paginate.getTotalRow());
-		resultMap.put("rows", paginate.getList());
-		renderJson(resultMap);
-	}
 	
 	
 	
